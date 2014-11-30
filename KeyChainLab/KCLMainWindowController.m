@@ -31,16 +31,34 @@
  **                                                                         **
  ****************************************************************************/
 
-#import <Cocoa/Cocoa.h>
+#import "KCLMainWindowController.h"
 
-@class KCLMainWindowController;
+// KCLMainWindowController class
+@implementation KCLMainWindowController
 
-// KCLAppDelegate class
-@interface KCLAppDelegate : NSObject <NSApplicationDelegate>
+#pragma mark Initializers
++ ( id ) mainWindowController
+    {
+    return [ [ [ [ self class ] alloc ] init ] autorelease ];
+    }
 
-@property ( nonatomic, retain ) KCLMainWindowController* mainWindowController;
+- ( id ) init
+    {
+    if ( self = [ super initWithWindowNibName: @"KCLMainWindow" ] )
+        {
+        // TODO:
+        }
 
-@end // KCLAppDelegate
+    return self;
+    }
+
+#pragma mark Conforms <NSNibAwaking> protocol
+- ( void ) awakeFromNib
+    {
+    // TODO:
+    }
+
+@end // KCLMainWindowController
 
 //////////////////////////////////////////////////////////////////////////////
 

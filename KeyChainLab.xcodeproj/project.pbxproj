@@ -12,12 +12,14 @@
 		830827EC1A2B0E590050A473 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 830827EB1A2B0E590050A473 /* main.m */; };
 		830827F01A2B0E590050A473 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 830827EE1A2B0E590050A473 /* Credits.rtf */; };
 		830827F31A2B0E590050A473 /* KCLAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 830827F21A2B0E590050A473 /* KCLAppDelegate.m */; };
-		830827F61A2B0E590050A473 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 830827F41A2B0E590050A473 /* MainMenu.xib */; };
+		830827F61A2B0E590050A473 /* KCLMainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 830827F41A2B0E590050A473 /* KCLMainMenu.xib */; };
 		830827F81A2B0E590050A473 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 830827F71A2B0E590050A473 /* Images.xcassets */; };
 		830827FF1A2B0E5A0050A473 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 830827FE1A2B0E5A0050A473 /* XCTest.framework */; };
 		830828001A2B0E5A0050A473 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 830827DF1A2B0E590050A473 /* Cocoa.framework */; };
 		830828081A2B0E5A0050A473 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 830828061A2B0E5A0050A473 /* InfoPlist.strings */; };
 		8308280A1A2B0E5A0050A473 /* KeyChainLabTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 830828091A2B0E5A0050A473 /* KeyChainLabTests.m */; };
+		830BAB691A2B0F18001DF6B4 /* KCLMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830BAB681A2B0F18001DF6B4 /* KCLMainWindowController.m */; };
+		830BAB6C1A2B0F54001DF6B4 /* KCLMainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 830BAB6A1A2B0F54001DF6B4 /* KCLMainWindow.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,13 +45,16 @@
 		830827EF1A2B0E590050A473 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		830827F11A2B0E590050A473 /* KCLAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = KCLAppDelegate.h; sourceTree = "<group>"; };
 		830827F21A2B0E590050A473 /* KCLAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KCLAppDelegate.m; sourceTree = "<group>"; };
-		830827F51A2B0E590050A473 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		830827F51A2B0E590050A473 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/KCLMainMenu.xib; sourceTree = "<group>"; };
 		830827F71A2B0E590050A473 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		830827FD1A2B0E5A0050A473 /* KeyChainLabTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KeyChainLabTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		830827FE1A2B0E5A0050A473 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		830828051A2B0E5A0050A473 /* KeyChainLabTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "KeyChainLabTests-Info.plist"; sourceTree = "<group>"; };
 		830828071A2B0E5A0050A473 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		830828091A2B0E5A0050A473 /* KeyChainLabTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = KeyChainLabTests.m; sourceTree = "<group>"; };
+		830BAB671A2B0F18001DF6B4 /* KCLMainWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KCLMainWindowController.h; sourceTree = "<group>"; };
+		830BAB681A2B0F18001DF6B4 /* KCLMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KCLMainWindowController.m; sourceTree = "<group>"; };
+		830BAB6B1A2B0F54001DF6B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/KCLMainWindow.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +122,10 @@
 			children = (
 				830827F11A2B0E590050A473 /* KCLAppDelegate.h */,
 				830827F21A2B0E590050A473 /* KCLAppDelegate.m */,
-				830827F41A2B0E590050A473 /* MainMenu.xib */,
+				830BAB671A2B0F18001DF6B4 /* KCLMainWindowController.h */,
+				830BAB681A2B0F18001DF6B4 /* KCLMainWindowController.m */,
+				830827F41A2B0E590050A473 /* KCLMainMenu.xib */,
+				830BAB6A1A2B0F54001DF6B4 /* KCLMainWindow.xib */,
 				830827F71A2B0E590050A473 /* Images.xcassets */,
 				830827E61A2B0E590050A473 /* Supporting Files */,
 			);
@@ -233,7 +241,8 @@
 				830827EA1A2B0E590050A473 /* InfoPlist.strings in Resources */,
 				830827F81A2B0E590050A473 /* Images.xcassets in Resources */,
 				830827F01A2B0E590050A473 /* Credits.rtf in Resources */,
-				830827F61A2B0E590050A473 /* MainMenu.xib in Resources */,
+				830BAB6C1A2B0F54001DF6B4 /* KCLMainWindow.xib in Resources */,
+				830827F61A2B0E590050A473 /* KCLMainMenu.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,6 +261,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				830BAB691A2B0F18001DF6B4 /* KCLMainWindowController.m in Sources */,
 				830827EC1A2B0E590050A473 /* main.m in Sources */,
 				830827F31A2B0E590050A473 /* KCLAppDelegate.m in Sources */,
 			);
@@ -292,12 +302,12 @@
 			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
-		830827F41A2B0E590050A473 /* MainMenu.xib */ = {
+		830827F41A2B0E590050A473 /* KCLMainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				830827F51A2B0E590050A473 /* Base */,
 			);
-			name = MainMenu.xib;
+			name = KCLMainMenu.xib;
 			sourceTree = "<group>";
 		};
 		830828061A2B0E5A0050A473 /* InfoPlist.strings */ = {
@@ -306,6 +316,14 @@
 				830828071A2B0E5A0050A473 /* en */,
 			);
 			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		830BAB6A1A2B0F54001DF6B4 /* KCLMainWindow.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				830BAB6B1A2B0F54001DF6B4 /* Base */,
+			);
+			name = KCLMainWindow.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -385,6 +403,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KeyChainLab/KeyChainLab-Prefix.pch";
@@ -398,6 +417,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_OBJC_ARC = NO;
 				COMBINE_HIDPI_IMAGES = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "KeyChainLab/KeyChainLab-Prefix.pch";
@@ -466,6 +486,7 @@
 				8308280F1A2B0E5A0050A473 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		830828101A2B0E5A0050A473 /* Build configuration list for PBXNativeTarget "KeyChainLabTests" */ = {
 			isa = XCConfigurationList;
@@ -474,6 +495,7 @@
 				830828121A2B0E5A0050A473 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

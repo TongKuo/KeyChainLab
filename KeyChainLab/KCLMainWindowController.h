@@ -33,14 +33,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class KCLMainWindowController;
+// KCLMainWindowController class
+@interface KCLMainWindowController : NSWindowController
 
-// KCLAppDelegate class
-@interface KCLAppDelegate : NSObject <NSApplicationDelegate>
++ ( id ) mainWindowController;
 
-@property ( nonatomic, retain ) KCLMainWindowController* mainWindowController;
-
-@end // KCLAppDelegate
+@end // KCLMainWindowController
 
 //////////////////////////////////////////////////////////////////////////////
 

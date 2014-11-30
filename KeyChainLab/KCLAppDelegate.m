@@ -1,18 +1,73 @@
-//
-//  KCLAppDelegate.m
-//  KeyChainLab
-//
-//  Created by Tong G. on 11/30/14.
-//
-//
+///:
+/*****************************************************************************
+ **                                                                         **
+ **                               .======.                                  **
+ **                               | INRI |                                  **
+ **                               |      |                                  **
+ **                               |      |                                  **
+ **                      .========'      '========.                         **
+ **                      |   _      xxxx      _   |                         **
+ **                      |  /_;-.__ / _\  _.-;_\  |                         **
+ **                      |     `-._`'`_/'`.-'     |                         **
+ **                      '========.`\   /`========'                         **
+ **                               | |  / |                                  **
+ **                               |/-.(  |                                  **
+ **                               |\_._\ |                                  **
+ **                               | \ \`;|                                  **
+ **                               |  > |/|                                  **
+ **                               | / // |                                  **
+ **                               | |//  |                                  **
+ **                               | \(\  |                                  **
+ **                               |  ``  |                                  **
+ **                               |      |                                  **
+ **                               |      |                                  **
+ **                               |      |                                  **
+ **                               |      |                                  **
+ **                   \\    _  _\\| \//  |//_   _ \// _                     **
+ **                  ^ `^`^ ^`` `^ ^` ``^^`  `^^` `^ `^                     **
+ **                                                                         **
+ **                       Copyright (c) 2014 Tong G.                        **
+ **                          ALL RIGHTS RESERVED.                           **
+ **                                                                         **
+ ****************************************************************************/
 
 #import "KCLAppDelegate.h"
+#import "KCLMainWindowController.h"
 
+// KCLAppDelegate class
 @implementation KCLAppDelegate
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
-{
-    // Insert code here to initialize your application
-}
+@synthesize mainWindowController;
 
-@end
+#pragma mark -
+#pragma mark Conforms <NSNibLoading> protocol
+- ( void ) awakeFromNib
+    {
+    self.mainWindowController = [ KCLMainWindowController mainWindowController ];
+
+    [ self.mainWindowController showWindow: self ];
+    }
+
+- ( void ) applicationDidFinishLaunching: ( NSNotification* )_Notification
+    {
+
+    }
+
+@end // KCLAppDelegate
+
+//////////////////////////////////////////////////////////////////////////////
+
+/*****************************************************************************
+ **                                                                         **
+ **      _________                                      _______             **
+ **     |___   ___|                                   / ______ \            **
+ **         | |     _______   _______   _______      | /      |_|           **
+ **         | |    ||     || ||     || ||     ||     | |    _ __            **
+ **         | |    ||     || ||     || ||     ||     | |   |__  \           **
+ **         | |    ||     || ||     || ||     ||     | \_ _ __| |  _        **
+ **         |_|    ||_____|| ||     || ||_____||      \________/  |_|       **
+ **                                           ||                            **
+ **                                    ||_____||                            **
+ **                                                                         **
+ ****************************************************************************/
+///:~
