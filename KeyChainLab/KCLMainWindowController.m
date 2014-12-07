@@ -47,18 +47,6 @@ NSString const* kClickToUnlockDescription = @"Click to unlock the login keychain
 // KCLMainWindowController class
 @implementation KCLMainWindowController
 
-@synthesize serviceNameTextField;
-@synthesize userNameTextField;
-@synthesize passwordSecureTextField;
-@synthesize verifySecureTextField;
-
-@synthesize cancleButton;
-@synthesize doneButton;
-
-@synthesize lockOrUnlockAll;
-    @synthesize lockIcon;
-    @synthesize unlockIcon;
-
 #pragma mark Initializers
 + ( instancetype ) mainWindowController
     {
@@ -392,7 +380,6 @@ OSStatus keychainCallback( SecKeychainEvent _Event
 #endif
 
 #if 0
-//    resultCode = SecKeychainSetUserInteractionAllowed( NO );
     NSLog( @"Error Code %u: %@", resultCode, SecCopyErrorMessageString( resultCode, NULL ) );
     SecKeychainRef newKeychain = NULL;
     char const* keychainPath = "/Users/EsquireTongG/Desktop/NSTongG.keychain";
@@ -406,8 +393,6 @@ OSStatus keychainCallback( SecKeychainEvent _Event
         {
         NSLog( @"#2 Error Code %u: %@", resultCode, SecCopyErrorMessageString( resultCode, NULL ) );
         }
-
-//    SecKeychainUnlockAll();
 
     UInt32 version = 0;
     SecKeychainGetVersion( &version );
@@ -454,25 +439,6 @@ OSStatus keychainCallback( SecKeychainEvent _Event
     else
         printErr( resultCode );
 #endif
-    }
-
-#pragma mark IBActions
-- ( IBAction ) lockAllKeychain: ( id )_Sender
-    {
-    SecKeychainLockAll();
-    }
-
-- ( IBAction ) escape: ( id )_Sender
-    {
-    [ self testingForSecItemDelete ];
-    }
-
-- ( IBAction ) allIsDone: ( id )_Sender
-    {
-//    SecKeychainLockAll();
-//    SecKeychainRemoveCallback( keychainCallback );
-
-    [ self testingForSecItemUpdate ];
     }
 
 - ( SecKeychainItemRef ) addKeychainItemOfClass: ( SecItemClass )_ItemClass
@@ -577,42 +543,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 
     return access;
     }
-#if 0
-- ( OSStatus ) addInternetPassword: ( NSString* )_Password
-                           account: ( NSString* )_Account
-                            server: ( NSString* )_Server
-                         itemLabel: ( NSString* )_ItemLabel
-                              path: ( NSString* )_Path
-                          protocol: ( SecProtocolType )_Protocol
-                              port: ( short )_Port
-    {
-    OSStatus err;
-    SecKeychainItemRef item = NULL;
-    char const* pathUTF8 = [ _Path UTF8String ];
-    char const* serverUTF8 = [ _Server UTF8String ];
-    char const* accountUTF8 = [ _Account UTF8String ];
-    char const* passwordUTF8 = [ _Password UTF8String ];
-    char const* itemLabelUTF8 = [ _ItemLabel UTF8String ];
 
-    // Create initial access control settings for the item:
-    SecAccessRef access = createAccess( _ItemLabel );
-
-    // Following is the lower-level equivalent to the SecKeychainAddInternetPassword function:
-    NSAssert( strlen( itemLabelUTF8 ) <= 0xFFFFFFFF, nil );
-    NSAssert( strlen( accountUTF8 ) <= 0xFFFFFFFF, nil );
-    NSAssert( strlen( serverUTF8 ) <= 0xFFFFFFFF, nil );
-    NSAssert( strlen( pathUTF8 ) <= 0xFFFFFFFF, nil );
-
-    // Set up the attribute vector (each attribute consits of {tag, length, pointer} ):
-    SecKeychainAttribute attrs[] =
-        { { kSecLabelItemAttr, ( UInt32 )strlen( itemLabelUTF8 ), ( char* )itemLabelUTF8 }
-        , { kSecAccountItemAttr, ( UInt32 )strlen( accountUTF8 ), ( char* )accountUTF8 }
-        , { kSecServerItemAttr, ( UInt32 )strlen( serverUTF8 ), ( char* )serverUTF8 }
-        , { kSecPathItemAttr, ( UInt32 )strlen( pathUTF8 ), ( char* )pathUTF8 }
-        , { kSecPortItemAttr, sizeof( short ), ( short* )&port }
-        };
-    }
-#endif
 @end // KCLMainWindowController
 
 //////////////////////////////////////////////////////////////////////////////
