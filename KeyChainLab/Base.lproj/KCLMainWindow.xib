@@ -15,28 +15,29 @@
         <window title="Keychain Lab" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="427" width="382" height="91"/>
+            <rect key="contentRect" x="196" y="427" width="375" height="91"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="800"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="382" height="91"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="91"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <box autoresizesSubviews="NO" fixedFrame="YES" title="Normal Keychain Item" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="hYe-0a-bkc">
-                        <rect key="frame" x="17" y="16" width="348" height="62"/>
+                        <rect key="frame" x="17" y="16" width="341" height="62"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <view key="contentView">
-                            <rect key="frame" x="1" y="1" width="346" height="49"/>
+                            <rect key="frame" x="1" y="1" width="339" height="49"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
                                 <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zen-JB-Rrb">
-                                    <rect key="frame" x="18" y="15" width="311" height="25"/>
+                                    <rect key="frame" x="18" y="15" width="303" height="25"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                     <segmentedCell key="cell" alignment="left" style="texturedRounded" trackingMode="momentary" id="oVn-aW-0Jw">
                                         <font key="font" metaFont="system"/>
                                         <segments>
-                                            <segment label="Add" width="101"/>
-                                            <segment label="Delete" width="101" tag="1"/>
-                                            <segment label="Find" width="101"/>
+                                            <segment label="Add" width="73"/>
+                                            <segment label="Delete" width="73" tag="1"/>
+                                            <segment label="Find" width="74"/>
+                                            <segment label="Update" width="74"/>
                                         </segments>
                                     </segmentedCell>
                                     <connections>

@@ -285,9 +285,6 @@ OSStatus keychainCallback( SecKeychainEvent _Event
 #pragma mark Conforms <NSNibAwaking> protocol
 - ( void ) awakeFromNib
     {
-//    [ self testingForSecItemCopyMatching ];
-//    [ self testingForSecItemAdd ];
-
 #if 0
     SecKeychainAddCallback( keychainCallback, kSecEveryEventMask, NULL );
 
@@ -556,6 +553,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         case 0: [ self testingForSecItemAdd ];              break;
         case 1: [ self testingForSecItemDelete ];           break;
         case 2: [ self testingForSecItemCopyMatching ];     break;
+        case 3: [ self testingForSecItemUpdate ];           break;
         }
     }
 
