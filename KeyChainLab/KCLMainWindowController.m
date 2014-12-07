@@ -116,7 +116,7 @@ OSStatus keychainCallback( SecKeychainEvent _Event
 
 - ( void ) testingForSecItemAdd
     {
-    SecKeychainSetUserInteractionAllowed( NO );
+//    SecKeychainSetUserInteractionAllowed( NO );
     OSStatus resultCode = errSecSuccess;
 
     SecKeychainRef NSTongG_Keychain = NULL;
@@ -200,13 +200,13 @@ OSStatus keychainCallback( SecKeychainEvent _Event
     {
     OSStatus resultCode = errSecSuccess;
 
-    SecKeychainRef oldDefaultKeychain = NULL;
-    SecKeychainCopyDefault( &oldDefaultKeychain );
+//    SecKeychainRef oldDefaultKeychain = NULL;
+//    SecKeychainCopyDefault( &oldDefaultKeychain );
 
-    UInt32 pathLength = MAXPATHLEN;
-    char pathForDefaultKeychain[ MAXPATHLEN + 1 ];
-    SecKeychainGetPath( oldDefaultKeychain, &pathLength, pathForDefaultKeychain );
-    NSLog( @"%s", pathForDefaultKeychain );
+//    UInt32 pathLength = MAXPATHLEN;
+//    char pathForDefaultKeychain[ MAXPATHLEN + 1 ];
+//    SecKeychainGetPath( oldDefaultKeychain, &pathLength, pathForDefaultKeychain );
+//    NSLog( @"%s", pathForDefaultKeychain );
 
     SecKeychainRef NSTongG_Keychain = NULL;
     resultCode = SecKeychainOpen( "/Users/EsquireTongG/NSTongG.keychain", &NSTongG_Keychain );
@@ -220,8 +220,8 @@ OSStatus keychainCallback( SecKeychainEvent _Event
     SecKeychainRef defaultKeychain = NULL;
     SecKeychainCopyDefault( &defaultKeychain );
 
-//    CFArrayRef searchList = ( __bridge CFArrayRef )
-//        @[ ( __bridge id )NSTongG_Keychain, ( __bridge id )defaultKeychain ];
+    CFArrayRef searchList = ( __bridge CFArrayRef )
+        @[ ( __bridge id )NSTongG_Keychain, ( __bridge id )defaultKeychain ];
 
     CFTypeRef result = NULL;
     CFDictionaryRef queryCertificate = ( __bridge CFDictionaryRef )
@@ -259,7 +259,23 @@ OSStatus keychainCallback( SecKeychainEvent _Event
 
         else if ( CFGetTypeID( result ) == CFArrayGetTypeID() )
             {
-            NSLog( @"Refs: %@", ( __bridge NSArray* )result );
+            [ ( __bridge NSArray* )result enumerateObjectsUsingBlock:
+                ^( NSDictionary* _Elem, NSUInteger _Index, BOOL* _Stop )
+                    {
+                    CFDataRef data = NULL;
+                    SecKeychainItemCreatePersistentReference( ( __bridge SecKeychainItemRef )( _Elem[ @"v_Ref" ] ), &data );
+
+                    NSError* err = nil;
+                    BOOL isSuccess = [ ( __bridge NSData* )data writeToFile: @"/Users/EsquireTongG/keychainItem.dat"
+                                                                    options: NSDataWritingAtomic
+                                                                      error: &err ];
+
+                    if ( !isSuccess || err )
+                        {
+                        [ self presentError: err ];
+                        *_Stop = YES;
+                        }
+                    } ];
         #if 0
             CFArrayRef itemList = ( __bridge CFArrayRef )
                 @[ ( __bridge id )( CFArrayGetValueAtIndex( result, 0 ) ) ];
