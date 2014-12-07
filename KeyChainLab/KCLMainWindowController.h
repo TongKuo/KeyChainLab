@@ -36,6 +36,8 @@
 // KCLMainWindowController class
 @interface KCLMainWindowController : NSWindowController
 
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSSegmentedControl* keychainItemsSeg;
+
 + ( instancetype ) mainWindowController;
 
 @end // KCLMainWindowController

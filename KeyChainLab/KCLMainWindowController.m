@@ -47,6 +47,8 @@ NSString const* kClickToUnlockDescription = @"Click to unlock the login keychain
 // KCLMainWindowController class
 @implementation KCLMainWindowController
 
+@synthesize keychainItemsSeg;
+
 #pragma mark Initializers
 + ( instancetype ) mainWindowController
     {
@@ -284,7 +286,7 @@ OSStatus keychainCallback( SecKeychainEvent _Event
 - ( void ) awakeFromNib
     {
 //    [ self testingForSecItemCopyMatching ];
-    [ self testingForSecItemAdd ];
+//    [ self testingForSecItemAdd ];
 
 #if 0
     SecKeychainAddCallback( keychainCallback, kSecEveryEventMask, NULL );
@@ -542,6 +544,19 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         return nil;
 
     return access;
+    }
+
+#pragma mark IBActions
+- ( IBAction ) clickedSeg: ( NSSegmentedControl* )_Sender
+    {
+    NSInteger selectedIndex = [ _Sender selectedSegment ];
+
+    switch ( selectedIndex )
+        {
+        case 0: [ self testingForSecItemAdd ];              break;
+        case 1: [ self testingForSecItemDelete ];           break;
+        case 2: [ self testingForSecItemCopyMatching ];     break;
+        }
     }
 
 @end // KCLMainWindowController

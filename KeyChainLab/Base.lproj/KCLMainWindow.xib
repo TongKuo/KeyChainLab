@@ -6,6 +6,7 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="KCLMainWindowController">
             <connections>
+                <outlet property="keychainItemsSeg" destination="zen-JB-Rrb" id="dRi-Gw-5BK"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="Ddq-BN-C7v"/>
             </connections>
         </customObject>
@@ -38,6 +39,9 @@
                                             <segment label="Find" width="101"/>
                                         </segments>
                                     </segmentedCell>
+                                    <connections>
+                                        <action selector="clickedSeg:" target="-2" id="5MW-Ty-Q7l"/>
+                                    </connections>
                                 </segmentedControl>
                             </subviews>
                         </view>
