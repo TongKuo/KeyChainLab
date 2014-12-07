@@ -36,7 +36,21 @@
 // KCLMainWindowController class
 @interface KCLMainWindowController : NSWindowController
 
-+ ( id ) mainWindowController;
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSTextField* serviceNameTextField;
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSTextField* userNameTextField;
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSTextField* passwordSecureTextField;
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSTextField* verifySecureTextField;
+
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSButton* cancleButton;
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSButton* doneButton;
+
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSButton* lockOrUnlockAll;
+    @property ( nonatomic, retain ) NSImage* lockIcon;
+    @property ( nonatomic, retain ) NSImage* unlockIcon;
+
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSTextField* lockStateLabel;
+
++ ( instancetype ) mainWindowController;
 
 @end // KCLMainWindowController
 
