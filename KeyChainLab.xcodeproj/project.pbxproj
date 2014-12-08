@@ -22,6 +22,7 @@
 		830BAB6C1A2B0F54001DF6B4 /* KCLMainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 830BAB6A1A2B0F54001DF6B4 /* KCLMainWindow.xib */; };
 		83F967E01A35DECF00A667B8 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F967DF1A35DECF00A667B8 /* SecurityInterface.framework */; };
 		83F967E21A35DED600A667B8 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F967E11A35DED600A667B8 /* Security.framework */; };
+		83F967E41A35F82700A667B8 /* SecurityFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F967E31A35F82700A667B8 /* SecurityFoundation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		83F60F941A31A5F50035E544 /* KeyChainLab.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KeyChainLab.entitlements; sourceTree = "<group>"; };
 		83F967DF1A35DECF00A667B8 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = System/Library/Frameworks/SecurityInterface.framework; sourceTree = SDKROOT; };
 		83F967E11A35DED600A667B8 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		83F967E31A35F82700A667B8 /* SecurityFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityFoundation.framework; path = System/Library/Frameworks/SecurityFoundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				83F967E41A35F82700A667B8 /* SecurityFoundation.framework in Frameworks */,
 				83F967E21A35DED600A667B8 /* Security.framework in Frameworks */,
 				83F967E01A35DECF00A667B8 /* SecurityInterface.framework in Frameworks */,
 				830827E01A2B0E590050A473 /* Cocoa.framework in Frameworks */,
@@ -107,6 +110,7 @@
 		830827DE1A2B0E590050A473 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				83F967E31A35F82700A667B8 /* SecurityFoundation.framework */,
 				83F967E11A35DED600A667B8 /* Security.framework */,
 				83F967DF1A35DECF00A667B8 /* SecurityInterface.framework */,
 				830827DF1A2B0E590050A473 /* Cocoa.framework */,

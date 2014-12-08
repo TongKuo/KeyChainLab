@@ -6,6 +6,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="KCLMainWindowController">
             <connections>
+                <outlet property="authorizationView" destination="yKB-70-uLw" id="RhJ-Bb-r32"/>
+                <outlet property="certificatedItemSeg" destination="VfR-gm-r3F" id="uHY-Zn-iKz"/>
                 <outlet property="keychainItemsSeg" destination="zen-JB-Rrb" id="dRi-Gw-5BK"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="Ddq-BN-C7v"/>
             </connections>
@@ -15,14 +17,14 @@
         <window title="Keychain Lab" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="427" width="375" height="91"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="800"/>
+            <rect key="contentRect" x="196" y="292" width="375" height="266"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="91"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="266"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <box autoresizesSubviews="NO" fixedFrame="YES" title="Normal Keychain Item" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="hYe-0a-bkc">
-                        <rect key="frame" x="17" y="16" width="341" height="62"/>
+                        <rect key="frame" x="17" y="191" width="341" height="62"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <view key="contentView">
                             <rect key="frame" x="1" y="1" width="339" height="49"/>
@@ -41,7 +43,40 @@
                                         </segments>
                                     </segmentedCell>
                                     <connections>
-                                        <action selector="clickedSeg:" target="-2" id="5MW-Ty-Q7l"/>
+                                        <action selector="clickedSegForNormalKeychianItem:" target="-2" id="Fes-5P-82R"/>
+                                    </connections>
+                                </segmentedControl>
+                            </subviews>
+                        </view>
+                        <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                        <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <font key="titleFont" metaFont="miniSystem"/>
+                    </box>
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yKB-70-uLw" customClass="SFAuthorizationView">
+                        <rect key="frame" x="20" y="20" width="335" height="34"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                    </customView>
+                    <box autoresizesSubviews="NO" fixedFrame="YES" title="Certificates Item" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="WwT-Im-jUx">
+                        <rect key="frame" x="17" y="125" width="341" height="62"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <view key="contentView">
+                            <rect key="frame" x="1" y="1" width="339" height="49"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VfR-gm-r3F">
+                                    <rect key="frame" x="18" y="15" width="303" height="25"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <segmentedCell key="cell" alignment="left" style="texturedRounded" trackingMode="momentary" id="lQ4-Lp-0V8">
+                                        <font key="font" metaFont="system"/>
+                                        <segments>
+                                            <segment label="Add" width="73"/>
+                                            <segment label="Delete" width="73" tag="1"/>
+                                            <segment label="Find" width="74"/>
+                                            <segment label="Update" width="74"/>
+                                        </segments>
+                                    </segmentedCell>
+                                    <connections>
+                                        <action selector="clickedSegForCertificatesItem:" target="-2" id="zng-3q-GGN"/>
                                     </connections>
                                 </segmentedControl>
                             </subviews>

@@ -51,6 +51,8 @@ NSString const* kClickToUnlockDescription = @"Click to unlock the login keychain
 
 @synthesize keychainItemsSeg;
 
+@synthesize authorizationView;
+
 #pragma mark Initializers
 + ( instancetype ) mainWindowController
     {
@@ -266,7 +268,7 @@ OSStatus keychainCallback( SecKeychainEvent _Event
                 ^( NSDictionary* _Elem, NSUInteger _Index, BOOL* _Stop )
                     {
                     [ certificates addObject: ( __bridge id )( _Elem[ @"v_Ref" ] ) ];
-                #if 1
+                #if 0
                     CFDataRef data = NULL;
                     SecKeychainItemCreatePersistentReference( ( __bridge SecKeychainItemRef )( _Elem[ @"v_Ref" ] ), &data );
 
@@ -284,6 +286,9 @@ OSStatus keychainCallback( SecKeychainEvent _Event
                     } ];
 
             SFCertificatePanel* certificatePanel = [ SFCertificatePanel sharedCertificatePanel ];
+            [ certificatePanel setDefaultButtonTitle: NSLocalizedString( @"I see", nil ) ];
+            [ certificatePanel setAlternateButtonTitle: NSLocalizedString( @"Opps!", nil ) ];
+            [ certificatePanel setShowsHelp: YES ];
             [ certificatePanel runModalForCertificates: certificates showGroup: YES ];
         #if 0
             CFArrayRef itemList = ( __bridge CFArrayRef )
@@ -310,12 +315,16 @@ OSStatus keychainCallback( SecKeychainEvent _Event
 #pragma mark Conforms <NSNibAwaking> protocol
 - ( void ) awakeFromNib
     {
-    NSData* persistentCert = [ NSData dataWithContentsOfFile: @"/Users/EsquireTongG/keychainItem.dat" ];
-    SecKeychainItemRef item = NULL;
-    SecKeychainItemCopyFromPersistentReference( ( __bridge CFDataRef )persistentCert, &item );
+    
+
+#if 0
+    NSData* persistentItem = [ NSData dataWithContentsOfFile: @"/Users/EsquireTongG/keychainItem.dat" ];
+    SecKeychainItemRef itemAwakedFromPersistentData = NULL;
+    SecKeychainItemCopyFromPersistentReference( ( __bridge CFDataRef )persistentItem, &itemAwakedFromPersistentData );
 
     SFCertificatePanel* certPanel = [ SFCertificatePanel sharedCertificatePanel ];
-    [ certPanel runModalForCertificates: @[ ( __bridge id )item ] showGroup: YES ];
+    [ certPanel runModalForCertificates: @[ ( __bridge id )itemAwakedFromPersistentData ] showGroup: YES ];
+#endif
 
 #if 0
     SecKeychainAddCallback( keychainCallback, kSecEveryEventMask, NULL );
@@ -576,7 +585,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     }
 
 #pragma mark IBActions
-- ( IBAction ) clickedSeg: ( NSSegmentedControl* )_Sender
+- ( IBAction ) clickedSegForNormalKeychianItem: ( NSSegmentedControl* )_Sender
     {
     NSInteger selectedIndex = [ _Sender selectedSegment ];
 
@@ -587,6 +596,76 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         case 2: [ self testingForSecItemCopyMatching ];     break;
         case 3: [ self testingForSecItemUpdate ];           break;
         }
+    }
+
+- ( IBAction ) clickedSegForCertificatesItem: ( NSSegmentedControl* )_Sender
+    {
+    NSInteger selectedIndex = [ _Sender selectedSegment ];
+
+    switch ( selectedIndex )
+        {
+        case 0: [ self addNewCertificate ];     break;
+        case 2: [ self findCertificate ];       break;
+        }
+    }
+
+- ( void ) addNewCertificate
+    {
+    OSStatus resultCode = errSecSuccess;
+
+    CFDictionaryRef attributes = ( __bridge CFDictionaryRef )
+        @{ ( __bridge id )kSecClass                 : ( __bridge id )kSecClassCertificate
+         , ( __bridge id )kSecAttrCertificateType   : @( CSSM_CERT_X_509v3 )
+         , ( __bridge id )kSecAttrLabel             : @"Check Check Check!"
+         , ( __bridge id )kSecReturnRef             : ( __bridge id )kCFBooleanTrue
+         };
+
+    CFTypeRef results = NULL;
+    resultCode = SecItemAdd( attributes, &results );
+
+    if ( resultCode == errSecSuccess && results )
+        {
+        NSLog( @"%@", ( __bridge id )results );
+        }
+    else
+        {
+        printErr( resultCode );
+        abort();
+        }
+    }
+
+- ( void ) findCertificate
+    {
+    OSStatus resultCode = errSecSuccess;
+
+    SecKeychainRef NSTongG_Keychain = NULL;
+    SecKeychainRef defaultKeychianForCurrentUser = NULL;
+    resultCode = SecKeychainOpen( "/Users/EsquireTongG/NSTongG.keychain", &NSTongG_Keychain );
+    resultCode = resultCode ?: SecKeychainCopyDefault( &defaultKeychianForCurrentUser );
+    if ( resultCode != errSecSuccess || !NSTongG_Keychain )
+        {
+        printErr( resultCode );
+        return;
+        }
+
+    CFDictionaryRef queryAttrList = ( __bridge CFDictionaryRef )
+        @{ ( __bridge id )kSecClass                         : ( __bridge id )kSecClassCertificate
+         , ( __bridge id )kSecMatchLimit                    : ( __bridge id )kSecMatchLimitOne
+         , ( __bridge id )kSecMatchSearchList               : @[ ( __bridge id )NSTongG_Keychain ]
+         , ( __bridge id )kSecMatchEmailAddressIfPresent    : @"Tong-G@outlook.com"
+         , ( __bridge id )kSecReturnRef                     : ( __bridge id )kCFBooleanTrue
+         };
+
+    CFTypeRef result = NULL;
+    SecItemCopyMatching( queryAttrList, &result );
+
+    if ( resultCode == errSecSuccess && result )
+        {
+        SFCertificatePanel* certPanel = [ SFCertificatePanel sharedCertificatePanel ];
+        [ certPanel runModalForCertificates: @[ ( __bridge id )result ] showGroup: YES ];
+        }
+    else
+        printErr( resultCode );
     }
 
 @end // KCLMainWindowController

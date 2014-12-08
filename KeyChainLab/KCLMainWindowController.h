@@ -33,10 +33,15 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class SFAuthorizationView;
+
 // KCLMainWindowController class
 @interface KCLMainWindowController : NSWindowController
 
 @property ( nonatomic, unsafe_unretained ) IBOutlet NSSegmentedControl* keychainItemsSeg;
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSSegmentedControl* certificatedItemSeg;
+
+@property ( nonatomic, unsafe_unretained ) IBOutlet SFAuthorizationView* authorizationView;
 
 + ( instancetype ) mainWindowController;
 
