@@ -20,6 +20,8 @@
 		8308280A1A2B0E5A0050A473 /* KeyChainLabTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 830828091A2B0E5A0050A473 /* KeyChainLabTests.m */; };
 		830BAB691A2B0F18001DF6B4 /* KCLMainWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 830BAB681A2B0F18001DF6B4 /* KCLMainWindowController.m */; };
 		830BAB6C1A2B0F54001DF6B4 /* KCLMainWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 830BAB6A1A2B0F54001DF6B4 /* KCLMainWindow.xib */; };
+		83F967E01A35DECF00A667B8 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F967DF1A35DECF00A667B8 /* SecurityInterface.framework */; };
+		83F967E21A35DED600A667B8 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 83F967E11A35DED600A667B8 /* Security.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +58,8 @@
 		830BAB681A2B0F18001DF6B4 /* KCLMainWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KCLMainWindowController.m; sourceTree = "<group>"; };
 		830BAB6B1A2B0F54001DF6B4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/KCLMainWindow.xib; sourceTree = "<group>"; };
 		83F60F941A31A5F50035E544 /* KeyChainLab.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = KeyChainLab.entitlements; sourceTree = "<group>"; };
+		83F967DF1A35DECF00A667B8 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = System/Library/Frameworks/SecurityInterface.framework; sourceTree = SDKROOT; };
+		83F967E11A35DED600A667B8 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +67,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				83F967E21A35DED600A667B8 /* Security.framework in Frameworks */,
+				83F967E01A35DECF00A667B8 /* SecurityInterface.framework in Frameworks */,
 				830827E01A2B0E590050A473 /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -101,6 +107,8 @@
 		830827DE1A2B0E590050A473 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				83F967E11A35DED600A667B8 /* Security.framework */,
+				83F967DF1A35DECF00A667B8 /* SecurityInterface.framework */,
 				830827DF1A2B0E590050A473 /* Cocoa.framework */,
 				830827FE1A2B0E5A0050A473 /* XCTest.framework */,
 				830827E11A2B0E590050A473 /* Other Frameworks */,

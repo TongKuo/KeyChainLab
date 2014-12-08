@@ -32,6 +32,8 @@
  ****************************************************************************/
 
 #import "KCLMainWindowController.h"
+#import <SecurityInterface/SFCertificatePanel.h>
+#import <SecurityInterface/SFCertificateView.h>
 
 #define printErr( _ResultCode )                                                 \
     NSLog( @"Error Occured (%d): `%@' (Line: %d Function/Method: %s)"           \
@@ -213,22 +215,22 @@ OSStatus keychainCallback( SecKeychainEvent _Event
     if ( resultCode != errSecSuccess )
         return;
 
-    resultCode = SecKeychainSetDefault( NSTongG_Keychain );
-    if ( resultCode != errSecSuccess )
-        NSLog( @"Failed to reset the default keychain: (%d): %@", resultCode, ( __bridge NSString* )SecCopyErrorMessageString( resultCode, NULL ) );
+//    resultCode = SecKeychainSetDefault( NSTongG_Keychain );
+//    if ( resultCode != errSecSuccess )
+//        printErr( resultCode );
 
     SecKeychainRef defaultKeychain = NULL;
     SecKeychainCopyDefault( &defaultKeychain );
 
-    CFArrayRef searchList = ( __bridge CFArrayRef )
-        @[ ( __bridge id )NSTongG_Keychain, ( __bridge id )defaultKeychain ];
+//    CFArrayRef searchList = ( __bridge CFArrayRef )
+//        @[ ( __bridge id )NSTongG_Keychain, ( __bridge id )defaultKeychain ];
 
     CFTypeRef result = NULL;
     CFDictionaryRef queryCertificate = ( __bridge CFDictionaryRef )
         @{ ( __bridge id )kSecClass                         : ( __bridge id )kSecClassCertificate
          , ( __bridge id )kSecMatchLimit                    : ( __bridge id )kSecMatchLimitAll
 //         , ( __bridge id )kSecMatchSearchList               : ( __bridge NSArray* )searchList
-         , ( __bridge id )kSecMatchSubjectContains          : ( __bridge NSString* )CFSTR( "Tông GUO" )
+         , ( __bridge id )kSecMatchSubjectContains          : ( __bridge NSString* )CFSTR( "Mac Developer" )
          , ( __bridge id )kSecMatchCaseInsensitive          : ( __bridge id )kCFBooleanTrue
          , ( __bridge id )kSecMatchDiacriticInsensitive     : ( __bridge id )kCFBooleanTrue
          , ( __bridge id )kSecMatchTrustedOnly              : ( __bridge id )kCFBooleanTrue
@@ -259,9 +261,12 @@ OSStatus keychainCallback( SecKeychainEvent _Event
 
         else if ( CFGetTypeID( result ) == CFArrayGetTypeID() )
             {
+            NSMutableArray* certificates = [ NSMutableArray array ];
             [ ( __bridge NSArray* )result enumerateObjectsUsingBlock:
                 ^( NSDictionary* _Elem, NSUInteger _Index, BOOL* _Stop )
                     {
+                    [ certificates addObject: ( __bridge id )( _Elem[ @"v_Ref" ] ) ];
+                #if 1
                     CFDataRef data = NULL;
                     SecKeychainItemCreatePersistentReference( ( __bridge SecKeychainItemRef )( _Elem[ @"v_Ref" ] ), &data );
 
@@ -275,7 +280,11 @@ OSStatus keychainCallback( SecKeychainEvent _Event
                         [ self presentError: err ];
                         *_Stop = YES;
                         }
+                #endif
                     } ];
+
+            SFCertificatePanel* certificatePanel = [ SFCertificatePanel sharedCertificatePanel ];
+            [ certificatePanel runModalForCertificates: certificates showGroup: YES ];
         #if 0
             CFArrayRef itemList = ( __bridge CFArrayRef )
                 @[ ( __bridge id )( CFArrayGetValueAtIndex( result, 0 ) ) ];
@@ -301,6 +310,13 @@ OSStatus keychainCallback( SecKeychainEvent _Event
 #pragma mark Conforms <NSNibAwaking> protocol
 - ( void ) awakeFromNib
     {
+    NSData* persistentCert = [ NSData dataWithContentsOfFile: @"/Users/EsquireTongG/keychainItem.dat" ];
+    SecKeychainItemRef item = NULL;
+    SecKeychainItemCopyFromPersistentReference( ( __bridge CFDataRef )persistentCert, &item );
+
+    SFCertificatePanel* certPanel = [ SFCertificatePanel sharedCertificatePanel ];
+    [ certPanel runModalForCertificates: @[ ( __bridge id )item ] showGroup: YES ];
+
 #if 0
     SecKeychainAddCallback( keychainCallback, kSecEveryEventMask, NULL );
 
