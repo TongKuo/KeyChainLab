@@ -50,6 +50,9 @@ NSString const* kClickToUnlockDescription = @"Click to unlock the login keychain
 @implementation KCLMainWindowController
 
 @synthesize keychainItemsSeg;
+@synthesize certificatedItemSeg;
+
+@synthesize evaludateTrustButton;
 
 @synthesize authorizationView;
 
@@ -666,6 +669,53 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         }
     else
         printErr( resultCode );
+    }
+
+- ( IBAction ) evaluateTrust: ( id )_Sender
+    {
+    OSStatus resultCode = errSecSuccess;
+
+    CSSM_OID const* policyOID = &CSSMOID_APPLE_X509_BASIC;
+    SecPolicyRef policy = [ self findPolicyWithOID: policyOID status: &resultCode ];
+    if ( resultCode != errSecSuccess || !policy )
+        printErr( resultCode );
+    else
+        {
+        NSLog( @"%@", ( __bridge id )policy );
+
+        CFRelease( policy );
+        }
+    }
+
+- ( SecPolicyRef ) findPolicyWithOID: ( CSSM_OID const* )_PolicyOID
+                              status: ( OSStatus* )_Status
+    {
+    OSStatus resultCode = errSecSuccess;
+    SecPolicySearchRef searchRef = NULL;
+    SecPolicyRef policy = NULL;
+
+    resultCode = SecPolicySearchCreate( CSSM_CERT_X_509v3
+                                      , _PolicyOID
+                                      , NULL
+                                      , &searchRef
+                                      );
+    if ( resultCode == errSecSuccess )
+        {
+        resultCode = SecPolicySearchCopyNext( searchRef, &policy );
+
+        if ( searchRef )
+            CFRelease( searchRef );
+
+        if ( _Status )
+            *_Status = resultCode;
+        }
+    else
+        {
+        if ( _Status )
+            *_Status = resultCode;
+        }
+
+    return policy;
     }
 
 @end // KCLMainWindowController
