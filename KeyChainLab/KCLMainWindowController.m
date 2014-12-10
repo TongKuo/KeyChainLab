@@ -604,11 +604,18 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 - ( IBAction ) clickedSegForCertificatesItem: ( NSSegmentedControl* )_Sender
     {
     NSInteger selectedIndex = [ _Sender selectedSegment ];
+    NSError* err = nil;
 
     switch ( selectedIndex )
         {
         case 0: [ self addNewCertificate ];     break;
-        case 2: [ self findCertificate ];       break;
+        case 2:
+            {
+            [ self findCertificate: &err ];
+
+            if ( err )
+                [ self presentError: err ];
+            } break;
         }
     }
 
@@ -637,7 +644,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         }
     }
 
-- ( void ) findCertificate
+- ( void ) findCertificate: ( NSError** )_Error
     {
     OSStatus resultCode = errSecSuccess;
 
@@ -654,13 +661,13 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     CFDictionaryRef queryAttrList = ( __bridge CFDictionaryRef )
         @{ ( __bridge id )kSecClass                         : ( __bridge id )kSecClassCertificate
          , ( __bridge id )kSecMatchLimit                    : ( __bridge id )kSecMatchLimitOne
-         , ( __bridge id )kSecMatchSearchList               : @[ ( __bridge id )NSTongG_Keychain ]
-         , ( __bridge id )kSecMatchEmailAddressIfPresent    : @"Tong-G@outlook.com"
+         , ( __bridge id )kSecMatchSearchList               : @[ ( __bridge id )NSTongG_Keychain, ( __bridge id )defaultKeychianForCurrentUser ]
+         , ( __bridge id )kSecMatchEmailAddressIfPresent    : @"Tong-G@outlok.com"
          , ( __bridge id )kSecReturnRef                     : ( __bridge id )kCFBooleanTrue
          };
 
     CFTypeRef result = NULL;
-    SecItemCopyMatching( queryAttrList, &result );
+    resultCode = SecItemCopyMatching( queryAttrList, &result );
 
     if ( resultCode == errSecSuccess && result )
         {
@@ -668,7 +675,20 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         [ certPanel runModalForCertificates: @[ ( __bridge id )result ] showGroup: YES ];
         }
     else
-        printErr( resultCode );
+        {
+        if ( _Error )
+            {
+            NSMutableString* failureReason = [ ( __bridge NSString* )SecCopyErrorMessageString( resultCode, NULL ) mutableCopy ];
+            NSString* beginningLetter = [ failureReason substringToIndex: 1 ];
+            [ failureReason replaceCharactersInRange: NSMakeRange( 0, 1 )
+                                          withString: [ beginningLetter lowercaseString ] ];
+            [ failureReason insertString: NSLocalizedString( @"Because ", nil ) atIndex: 0 ];
+
+            *_Error = [ NSError errorWithDomain: NSOSStatusErrorDomain
+                                           code: ( NSInteger )resultCode
+                                       userInfo: @{ NSLocalizedFailureReasonErrorKey : failureReason } ];
+            }
+        }
     }
 
 - ( IBAction ) evaluateTrust: ( id )_Sender
@@ -681,7 +701,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         printErr( resultCode );
     else
         {
-        NSLog( @"%@", ( __bridge id )policy );
+//        resultCode = SecTrustCreateWithCertificates
 
         CFRelease( policy );
         }
