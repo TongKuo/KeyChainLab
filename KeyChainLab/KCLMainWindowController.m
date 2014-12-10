@@ -33,6 +33,7 @@
 
 #import "KCLMainWindowController.h"
 #import <SecurityInterface/SFCertificatePanel.h>
+#import <SecurityInterface/SFCertificateTrustPanel.h>
 #import <SecurityInterface/SFCertificateView.h>
 
 #define printErr( _ResultCode )                                                 \
@@ -661,9 +662,10 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 
     CFDictionaryRef queryAttrList = ( __bridge CFDictionaryRef )
         @{ ( __bridge id )kSecClass                         : ( __bridge id )kSecClassCertificate
+         , ( __bridge id )kSecMatchSubjectContains          : @"Mac Developer: Tong Guo (8ZDY95NQGT)"
+//         , ( __bridge id )kSecMatchSubjectContains          : @"FuckFuckGo"
          , ( __bridge id )kSecMatchLimit                    : ( __bridge id )kSecMatchLimitOne
          , ( __bridge id )kSecMatchSearchList               : @[ ( __bridge id )NSTongG_Keychain, ( __bridge id )defaultKeychianForCurrentUser ]
-         , ( __bridge id )kSecMatchEmailAddressIfPresent    : @"Tong-G@outlook.com"
          , ( __bridge id )kSecReturnRef                     : ( __bridge id )kCFBooleanTrue
          };
 
@@ -692,23 +694,72 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     {
     OSStatus resultCode = errSecSuccess;
 
-    CSSM_OID const* policyOID = &CSSMOID_APPLE_X509_BASIC;
-    SecPolicyRef policy = [ self findPolicyWithOID: policyOID status: &resultCode ];
-    if ( resultCode != errSecSuccess || !policy )
+    CSSM_OID const x509PolicyOID = CSSMOID_APPLE_X509_BASIC;
+    CSSM_OID const kerberosClientPolicyOID = CSSMOID_APPLE_TP_PKINIT_CLIENT;
+    CSSM_OID const kerberosServerPolicyOID = CSSMOID_APPLE_TP_PKINIT_SERVER;
+    CSSM_OID const codesignPolicyOID = CSSMOID_APPLE_TP_CODE_SIGNING;
+    CSSM_OID const packageSigningPolicyOID = CSSMOID_APPLE_TP_PACKAGE_SIGNING;
+    CSSM_OID const MacAppStoreReceiptPolicyOID = CSSMOID_APPLE_TP_MACAPPSTORE_RECEIPT;
+    CSSM_OID const timeStampingPolicyOID = CSSMOID_APPLE_TP_TIMESTAMPING;
+
+    SecPolicyRef x509Policy = [ self findPolicyWithOID: &x509PolicyOID status: &resultCode ];
+    SecPolicyRef kerberosClientPolicy = [ self findPolicyWithOID: &kerberosClientPolicyOID status: &resultCode ];
+    SecPolicyRef kerberosServerPolicy = [ self findPolicyWithOID: &kerberosServerPolicyOID status: &resultCode ];
+    SecPolicyRef codesignPolicy = [ self findPolicyWithOID: &codesignPolicyOID status: &resultCode ];
+    SecPolicyRef packageSigningPolicy = [ self findPolicyWithOID: &packageSigningPolicyOID status: &resultCode ];
+//    SecPolicyRef MacAppStoreReceiptPolicy = [ self findPolicyWithOID: &MacAppStoreReceiptPolicyOID status: &resultCode ];
+    SecPolicyRef timeStampingPolicy = [ self findPolicyWithOID: &timeStampingPolicyOID status: &resultCode ];
+
+//    SecPolicyRef SSLPolicy = SecPolicyCreateSSL( YES, CFSTR( "https://www.oschina.net" ) );
+//    NSLog( @"Policy: %@", ( __bridge NSDictionary* )SecPolicyCopyProperties( X509Policy ) );
+//    NSLog( @"Policy: %@", ( __bridge NSDictionary* )SecPolicyCopyProperties( SSLPolicy ) );
+    if ( resultCode != errSecSuccess )
         printErr( resultCode );
     else
         {
         NSError* err = nil;
         SecCertificateRef certificate = [ self findCertificate: &err ];
+
+        CFArrayRef certs = ( CFArrayRef )@[ ( __bridge id )certificate ];
+        CFArrayRef policies = ( CFArrayRef )@[ ( __bridge id )x509Policy
+                                             , ( __bridge id )kerberosClientPolicy
+                                             , ( __bridge id )kerberosServerPolicy
+                                             , ( __bridge id )codesignPolicy
+                                             , ( __bridge id )packageSigningPolicy
+//                                             , ( __bridge id )MacAppStoreReceiptPolicy
+                                             , ( __bridge id )timeStampingPolicy
+                                             ];
         if ( err )
             {
             [ self presentError: err ];
             return;
             }
 
-//        resultCode = SecTrustCreateWithCertificates
+        SecTrustRef trust = NULL;
+        resultCode = SecTrustCreateWithCertificates( certs, policies, &trust );
+        if ( resultCode == errSecSuccess )
+            {
+            CFStringRef commonName = NULL;
+            resultCode = SecCertificateCopyCommonName( certificate, &commonName );
 
-        CFRelease( policy );
+            SecTrustResultType resultType = 0;
+            SecTrustEvaluate( trust, &resultType );
+            NSLog( @"%d", resultType );
+
+            SFCertificateTrustPanel* trustPanel = [ SFCertificateTrustPanel sharedCertificateTrustPanel ];
+            [ trustPanel setInformativeText: NSLocalizedString( @"The certificate will be marked as trusted for the current user only. To change your decision later, open the certificate in Keychain Access and edit its Trust Settings", nil ) ];
+            [ trustPanel runModalForTrust: trust
+                                  message: NSLocalizedString( ( [ NSString stringWithFormat: @"Do you want your computer to trust certificates signed by \"%@\" from now on?", ( __bridge NSString* )commonName ] ), nil ) ];
+            }
+        else
+            {
+            NSError* error = [ NSError errorWithDomain: NSOSStatusErrorDomain
+                                                  code: ( NSInteger )resultCode
+                                              userInfo: nil ];
+            [ self presentError: error ];
+            }
+
+        CFRelease( x509Policy );
         }
     }
 
