@@ -644,9 +644,10 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         }
     }
 
-- ( void ) findCertificate: ( NSError** )_Error
+- ( SecCertificateRef ) findCertificate: ( NSError** )_Error
     {
     OSStatus resultCode = errSecSuccess;
+    SecCertificateRef certificate = NULL;
 
     SecKeychainRef NSTongG_Keychain = NULL;
     SecKeychainRef defaultKeychianForCurrentUser = NULL;
@@ -655,26 +656,20 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     if ( resultCode != errSecSuccess || !NSTongG_Keychain )
         {
         printErr( resultCode );
-        return;
+        return NULL;
         }
 
     CFDictionaryRef queryAttrList = ( __bridge CFDictionaryRef )
         @{ ( __bridge id )kSecClass                         : ( __bridge id )kSecClassCertificate
          , ( __bridge id )kSecMatchLimit                    : ( __bridge id )kSecMatchLimitOne
          , ( __bridge id )kSecMatchSearchList               : @[ ( __bridge id )NSTongG_Keychain, ( __bridge id )defaultKeychianForCurrentUser ]
-         , ( __bridge id )kSecMatchEmailAddressIfPresent    : @"Tong-G@outlok.com"
+         , ( __bridge id )kSecMatchEmailAddressIfPresent    : @"Tong-G@outlook.com"
          , ( __bridge id )kSecReturnRef                     : ( __bridge id )kCFBooleanTrue
          };
 
-    CFTypeRef result = NULL;
-    resultCode = SecItemCopyMatching( queryAttrList, &result );
+    resultCode = SecItemCopyMatching( queryAttrList, ( CFTypeRef* )&certificate );
 
-    if ( resultCode == errSecSuccess && result )
-        {
-        SFCertificatePanel* certPanel = [ SFCertificatePanel sharedCertificatePanel ];
-        [ certPanel runModalForCertificates: @[ ( __bridge id )result ] showGroup: YES ];
-        }
-    else
+    if ( resultCode != errSecSuccess  )
         {
         if ( _Error )
             {
@@ -689,6 +684,8 @@ SecAccessRef createAccess( NSString* _AccessLabel )
                                        userInfo: @{ NSLocalizedFailureReasonErrorKey : failureReason } ];
             }
         }
+
+    return certificate;
     }
 
 - ( IBAction ) evaluateTrust: ( id )_Sender
@@ -701,6 +698,14 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         printErr( resultCode );
     else
         {
+        NSError* err = nil;
+        SecCertificateRef certificate = [ self findCertificate: &err ];
+        if ( err )
+            {
+            [ self presentError: err ];
+            return;
+            }
+
 //        resultCode = SecTrustCreateWithCertificates
 
         CFRelease( policy );
