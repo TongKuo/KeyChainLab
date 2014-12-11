@@ -662,8 +662,8 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 
     CFDictionaryRef queryAttrList = ( __bridge CFDictionaryRef )
         @{ ( __bridge id )kSecClass                         : ( __bridge id )kSecClassCertificate
-         , ( __bridge id )kSecMatchSubjectContains          : @"Mac Developer: Tong Guo (8ZDY95NQGT)"
-//         , ( __bridge id )kSecMatchSubjectContains          : @"deviceid.apple.com"
+//         , ( __bridge id )kSecMatchSubjectContains          : @"Mac Developer: Tong Guo (8ZDY95NQGT)"
+         , ( __bridge id )kSecMatchSubjectContains          : @"deviceid.apple.com"
 //         , ( __bridge id )kSecMatchSubjectContains          : @"FuckFuckGo"
          , ( __bridge id )kSecMatchLimit                    : ( __bridge id )kSecMatchLimitOne
          , ( __bridge id )kSecMatchSearchList               : @[ ( __bridge id )NSTongG_Keychain, ( __bridge id )defaultKeychianForCurrentUser ]
@@ -743,12 +743,17 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 //            cfDate = CFDateCreate( NULL, expiredDate );
 //            NSLog( @"%@", ( __bridge NSDate* )cfDate );
 
-            NSDate* eprDate = [ NSDate dateWithNaturalLanguageString: @"2014-12-12" ];
-            NSLog( @"%@", eprDate );
-            SecTrustSetVerifyDate( trust, ( __bridge CFDateRef )eprDate );
+//            NSDate* eprDate = [ NSDate dateWithNaturalLanguageString: @"2014-12-12" ];
+//            NSLog( @"%@", eprDate );
+//            SecTrustSetVerifyDate( trust, ( __bridge CFDateRef )eprDate );
 
             CFStringRef commonName = NULL;
             resultCode = SecCertificateCopyCommonName( certificate, &commonName );
+
+            CSSM_APPLE_TP_ACTION_DATA actionDataStruct = { CSSM_APPLE_TP_ACTION_VERSION, CSSM_TP_ACTION_ALLOW_EXPIRED | CSSM_TP_ACTION_ALLOW_EXPIRED_ROOT };
+            CFDataRef actionData = ( __bridge CFDataRef )[ NSData dataWithBytes: &actionDataStruct length: sizeof( actionData ) ];
+
+            SecTrustSetParameters( trust, CSSM_TP_ACTION_DEFAULT, actionData );
 
             SecTrustResultType resultType = 0;
             SecTrustEvaluate( trust, &resultType );
@@ -767,8 +772,12 @@ SecAccessRef createAccess( NSString* _AccessLabel )
                     {
                     NSLog( @"%x", statusChain[ index ].StatusBits );
                     allStatusBits = allStatusBits | statusChain[ index ].StatusBits;
-
                     }
+
+                if ( allStatusBits & CSSM_CERT_STATUS_EXPIRED )
+                    NSLog( @"Expired" );
+                else
+                    NSLog( @"Unexpired" );
                 }
 
             SFCertificateTrustPanel* trustPanel = [ SFCertificateTrustPanel sharedCertificateTrustPanel ];
