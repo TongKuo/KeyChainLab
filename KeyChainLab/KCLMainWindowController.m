@@ -663,6 +663,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     CFDictionaryRef queryAttrList = ( __bridge CFDictionaryRef )
         @{ ( __bridge id )kSecClass                         : ( __bridge id )kSecClassCertificate
          , ( __bridge id )kSecMatchSubjectContains          : @"Mac Developer: Tong Guo (8ZDY95NQGT)"
+//         , ( __bridge id )kSecMatchSubjectContains          : @"deviceid.apple.com"
 //         , ( __bridge id )kSecMatchSubjectContains          : @"FuckFuckGo"
          , ( __bridge id )kSecMatchLimit                    : ( __bridge id )kSecMatchLimitOne
          , ( __bridge id )kSecMatchSearchList               : @[ ( __bridge id )NSTongG_Keychain, ( __bridge id )defaultKeychianForCurrentUser ]
@@ -695,20 +696,18 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     OSStatus resultCode = errSecSuccess;
 
     CSSM_OID const x509PolicyOID = CSSMOID_APPLE_X509_BASIC;
-    CSSM_OID const kerberosClientPolicyOID = CSSMOID_APPLE_TP_PKINIT_CLIENT;
-    CSSM_OID const kerberosServerPolicyOID = CSSMOID_APPLE_TP_PKINIT_SERVER;
-    CSSM_OID const codesignPolicyOID = CSSMOID_APPLE_TP_CODE_SIGNING;
-    CSSM_OID const packageSigningPolicyOID = CSSMOID_APPLE_TP_PACKAGE_SIGNING;
-    CSSM_OID const MacAppStoreReceiptPolicyOID = CSSMOID_APPLE_TP_MACAPPSTORE_RECEIPT;
-    CSSM_OID const timeStampingPolicyOID = CSSMOID_APPLE_TP_TIMESTAMPING;
+//    CSSM_OID const kerberosClientPolicyOID = CSSMOID_APPLE_TP_PKINIT_CLIENT;
+//    CSSM_OID const kerberosServerPolicyOID = CSSMOID_APPLE_TP_PKINIT_SERVER;
+//    CSSM_OID const codesignPolicyOID = CSSMOID_APPLE_TP_CODE_SIGNING;
+//    CSSM_OID const packageSigningPolicyOID = CSSMOID_APPLE_TP_PACKAGE_SIGNING;
+//    CSSM_OID const timeStampingPolicyOID = CSSMOID_APPLE_TP_TIMESTAMPING;
 
     SecPolicyRef x509Policy = [ self findPolicyWithOID: &x509PolicyOID status: &resultCode ];
-    SecPolicyRef kerberosClientPolicy = [ self findPolicyWithOID: &kerberosClientPolicyOID status: &resultCode ];
-    SecPolicyRef kerberosServerPolicy = [ self findPolicyWithOID: &kerberosServerPolicyOID status: &resultCode ];
-    SecPolicyRef codesignPolicy = [ self findPolicyWithOID: &codesignPolicyOID status: &resultCode ];
-    SecPolicyRef packageSigningPolicy = [ self findPolicyWithOID: &packageSigningPolicyOID status: &resultCode ];
-//    SecPolicyRef MacAppStoreReceiptPolicy = [ self findPolicyWithOID: &MacAppStoreReceiptPolicyOID status: &resultCode ];
-    SecPolicyRef timeStampingPolicy = [ self findPolicyWithOID: &timeStampingPolicyOID status: &resultCode ];
+//    SecPolicyRef kerberosClientPolicy = [ self findPolicyWithOID: &kerberosClientPolicyOID status: &resultCode ];
+//    SecPolicyRef kerberosServerPolicy = [ self findPolicyWithOID: &kerberosServerPolicyOID status: &resultCode ];
+//    SecPolicyRef codesignPolicy = [ self findPolicyWithOID: &codesignPolicyOID status: &resultCode ];
+//    SecPolicyRef packageSigningPolicy = [ self findPolicyWithOID: &packageSigningPolicyOID status: &resultCode ];
+//    SecPolicyRef timeStampingPolicy = [ self findPolicyWithOID: &timeStampingPolicyOID status: &resultCode ];
 
 //    SecPolicyRef SSLPolicy = SecPolicyCreateSSL( YES, CFSTR( "https://www.oschina.net" ) );
 //    NSLog( @"Policy: %@", ( __bridge NSDictionary* )SecPolicyCopyProperties( X509Policy ) );
@@ -722,12 +721,11 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 
         CFArrayRef certs = ( CFArrayRef )@[ ( __bridge id )certificate ];
         CFArrayRef policies = ( CFArrayRef )@[ ( __bridge id )x509Policy
-                                             , ( __bridge id )kerberosClientPolicy
-                                             , ( __bridge id )kerberosServerPolicy
-                                             , ( __bridge id )codesignPolicy
-                                             , ( __bridge id )packageSigningPolicy
-//                                             , ( __bridge id )MacAppStoreReceiptPolicy
-                                             , ( __bridge id )timeStampingPolicy
+//                                             , ( __bridge id )kerberosClientPolicy
+//                                             , ( __bridge id )kerberosServerPolicy
+//                                             , ( __bridge id )codesignPolicy
+//                                             , ( __bridge id )packageSigningPolicy
+//                                             , ( __bridge id )timeStampingPolicy
                                              ];
         if ( err )
             {
@@ -739,6 +737,16 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         resultCode = SecTrustCreateWithCertificates( certs, policies, &trust );
         if ( resultCode == errSecSuccess )
             {
+//            CFAbsoluteTime expiredDate = 0;
+//            CFDateRef cfDate = NULL;
+//            expiredDate = 157680000;    // Second since 1 Jan 2001
+//            cfDate = CFDateCreate( NULL, expiredDate );
+//            NSLog( @"%@", ( __bridge NSDate* )cfDate );
+
+            NSDate* eprDate = [ NSDate dateWithNaturalLanguageString: @"2014-12-12" ];
+            NSLog( @"%@", eprDate );
+            SecTrustSetVerifyDate( trust, ( __bridge CFDateRef )eprDate );
+
             CFStringRef commonName = NULL;
             resultCode = SecCertificateCopyCommonName( certificate, &commonName );
 
@@ -746,10 +754,28 @@ SecAccessRef createAccess( NSString* _AccessLabel )
             SecTrustEvaluate( trust, &resultType );
             NSLog( @"%d", resultType );
 
+            CSSM_TP_APPLE_CERT_STATUS allStatusBits = 0x0;
+            if ( resultType == kSecTrustResultRecoverableTrustFailure
+                    || resultType == kSecTrustResultUnspecified )
+                {
+                CSSM_TP_APPLE_EVIDENCE_INFO* statusChain = NULL;
+                CFArrayRef certChain = NULL;
+                SecTrustGetResult( trust, &resultType, &certChain, &statusChain );
+                NSLog( @"%@", ( __bridge NSArray* )certChain );
+
+                for ( int index = 0; index < CFArrayGetCount( certChain ); index++ )
+                    {
+                    NSLog( @"%x", statusChain[ index ].StatusBits );
+                    allStatusBits = allStatusBits | statusChain[ index ].StatusBits;
+
+                    }
+                }
+
             SFCertificateTrustPanel* trustPanel = [ SFCertificateTrustPanel sharedCertificateTrustPanel ];
             [ trustPanel setInformativeText: NSLocalizedString( @"The certificate will be marked as trusted for the current user only. To change your decision later, open the certificate in Keychain Access and edit its Trust Settings", nil ) ];
             [ trustPanel runModalForTrust: trust
                                   message: NSLocalizedString( ( [ NSString stringWithFormat: @"Do you want your computer to trust certificates signed by \"%@\" from now on?", ( __bridge NSString* )commonName ] ), nil ) ];
+
             }
         else
             {
