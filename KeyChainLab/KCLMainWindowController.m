@@ -54,6 +54,7 @@ NSString const* kClickToUnlockDescription = @"Click to unlock the login keychain
 @synthesize certificatedItemSeg;
 
 @synthesize evaludateTrustButton;
+@synthesize createCertificateButton;
 
 @synthesize authorizationView;
 
@@ -827,6 +828,65 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         }
 
     return policy;
+    }
+
+- ( IBAction ) createCertificate: ( id )_Sender
+    {
+    OSStatus resultCode = errSecSuccess;
+
+    SecKeychainRef NSTongG_Keychain = NULL;
+    if ( ( resultCode = SecKeychainOpen( "/Users/EsquireTongG/NSTongG.keychain", &NSTongG_Keychain ) ) != errSecSuccess )
+        {
+        printErr( resultCode );
+        return;
+        }
+    else
+        NSLog( @"%@", ( __bridge id )NSTongG_Keychain );
+
+    NSURL* certURL = [ NSURL URLWithString: @"file:///Users/EsquireTongG/Desktop/Certificates.cer" ];
+
+    if ( [ [ NSFileManager defaultManager ] fileExistsAtPath: certURL.path ] )
+        {
+        NSData* certData = [ NSData dataWithContentsOfURL: certURL ];
+
+        SecCertificateRef certificate = SecCertificateCreateWithData( kCFAllocatorDefault, ( __bridge CFDataRef )certData );
+        NSLog( @"%@", ( __bridge id )certificate );
+
+        resultCode = SecCertificateAddToKeychain( certificate, NSTongG_Keychain );
+        if ( resultCode != errSecSuccess )
+            printErr( resultCode );
+
+        CFErrorRef error = NULL;
+        CFDataRef serialNumber = SecCertificateCopySerialNumber( certificate, &error );
+        if ( error )
+            {
+            [ self presentError: ( __bridge NSError* )error ];
+            return;
+            }
+
+        // Get the serial number of specified certificate
+        NSLog( @"Serial Number: %@", [ [ NSString alloc ] initWithData: ( __bridge NSData* )serialNumber
+                                                              encoding: NSUTF8StringEncoding ] );
+
+        NSLog( @"Short Description: %@", SecCertificateCopyShortDescription( kCFAllocatorDefault
+                                                                           , certificate
+                                                                           , NULL
+                                                                           ) );
+
+        NSLog( @"Subject Summary: %@", ( __bridge NSString* )SecCertificateCopySubjectSummary( certificate ) );
+
+        if ( certificate )
+            CFRelease( certificate );
+
+        if ( error )
+            CFRelease( error );
+
+        if ( serialNumber )
+            CFRelease( serialNumber );
+        }
+
+    if ( NSTongG_Keychain )
+        CFRelease( NSTongG_Keychain );
     }
 
 @end // KCLMainWindowController

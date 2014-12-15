@@ -8,6 +8,7 @@
             <connections>
                 <outlet property="authorizationView" destination="yKB-70-uLw" id="RhJ-Bb-r32"/>
                 <outlet property="certificatedItemSeg" destination="VfR-gm-r3F" id="uHY-Zn-iKz"/>
+                <outlet property="createCertificateButton" destination="NbL-Gj-8GP" id="8CY-2d-Ouo"/>
                 <outlet property="evaludateTrustButton" destination="FZH-JM-PL6" id="INY-WM-Gdd"/>
                 <outlet property="keychainItemsSeg" destination="zen-JB-Rrb" id="dRi-Gw-5BK"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="Ddq-BN-C7v"/>
@@ -87,7 +88,7 @@
                         <font key="titleFont" metaFont="miniSystem"/>
                     </box>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FZH-JM-PL6">
-                        <rect key="frame" x="132" y="67" width="110" height="23"/>
+                        <rect key="frame" x="129" y="99" width="116" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="smallSquare" title="Evaluate Trust" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jkn-pP-Rlb">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -95,6 +96,17 @@
                         </buttonCell>
                         <connections>
                             <action selector="evaluateTrust:" target="-2" id="uvD-jt-1LK"/>
+                        </connections>
+                    </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NbL-Gj-8GP">
+                        <rect key="frame" x="129" y="65" width="116" height="23"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="smallSquare" title="Create Certificate" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Mtw-5R-1Ys">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="createCertificate:" target="-2" id="5Ag-vr-Pgz"/>
                         </connections>
                     </button>
                 </subviews>

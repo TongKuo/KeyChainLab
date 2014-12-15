@@ -42,6 +42,7 @@
 @property ( nonatomic, unsafe_unretained ) IBOutlet NSSegmentedControl* certificatedItemSeg;
 
 @property ( nonatomic, unsafe_unretained ) IBOutlet NSButton* evaludateTrustButton;
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSButton* createCertificateButton;
 
 @property ( nonatomic, unsafe_unretained ) IBOutlet SFAuthorizationView* authorizationView;
 
