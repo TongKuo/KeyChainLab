@@ -843,7 +843,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     else
         NSLog( @"%@", ( __bridge id )NSTongG_Keychain );
 
-    NSURL* certURL = [ NSURL URLWithString: @"file:///Users/EsquireTongG/Desktop/Certificates.cer" ];
+    NSURL* certURL = [ NSURL URLWithString: @"file:///Users/EsquireTongG/Desktop/MacDeveloper.cer" ];
 
     if ( [ [ NSFileManager defaultManager ] fileExistsAtPath: certURL.path ] )
         {
@@ -874,6 +874,28 @@ SecAccessRef createAccess( NSString* _AccessLabel )
                                                                            ) );
 
         NSLog( @"Subject Summary: %@", ( __bridge NSString* )SecCertificateCopySubjectSummary( certificate ) );
+
+        NSDictionary* values = ( __bridge NSDictionary* )SecCertificateCopyValues( certificate, NULL, NULL );
+        NSLog( @"Contents: %@", values );
+
+        NSLog( @"%@", ( __bridge id )kSecOIDAuthorityInfoAccess );
+
+        fprintf( stdout, "\n----- Property Type Keys -----\n" );
+        NSLog( @"%@", ( __bridge id )kSecPropertyTypeWarning );
+        NSLog( @"%@", ( __bridge id )kSecPropertyTypeSuccess );
+        NSLog( @"%@", ( __bridge id )kSecPropertyTypeSection );
+        NSLog( @"%@", ( __bridge id )kSecPropertyTypeData );
+        NSLog( @"%@", ( __bridge id )kSecPropertyTypeURL );
+        NSLog( @"%@", ( __bridge id )kSecPropertyTypeDate );
+        NSLog( @"%@", ( __bridge id )kSecPropertyTypeString );
+        NSLog( @"%@", ( __bridge id )kSecPropertyTypeTitle );
+        NSLog( @"%@", ( __bridge id )kSecPropertyTypeError );
+        fprintf( stdout, "------------------------------\n\n" );
+
+        NSLog( @"%@", kSecPropertyKeyType );
+        NSLog( @"%@", kSecPropertyKeyLabel );
+        NSLog( @"%@", kSecPropertyKeyLocalizedLabel );
+        NSLog( @"%@", kSecPropertyKeyValue );
 
         if ( certificate )
             CFRelease( certificate );
