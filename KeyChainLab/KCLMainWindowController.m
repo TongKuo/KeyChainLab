@@ -44,6 +44,10 @@
          , __func__                                                             \
          )
 
+#define KCLRelease( _Object )   \
+    if ( _Object )              \
+        CFRelease( _Object )    \
+
 NSString const* kClickToLockDescription = @"Click to lock the login keychain";
 NSString const* kClickToUnlockDescription = @"Click to unlock the login keychain";
 
@@ -193,7 +197,7 @@ OSStatus keychainCallback( SecKeychainEvent _Event
         CFTypeID typeID = CFGetTypeID( addedItems );
         if ( typeID == CFDataGetTypeID() )
             {
-            NSURL* URL = [ NSURL URLWithString: @"file:///Users/EsquireTongG/addedItem.dat" ];
+            NSURL* URL = [ NSURL URLWithString: @"file:///Users/EsquireTongG/CertsForKeychainLab/addedItem.dat" ];
             if ( [ [ NSFileManager defaultManager ] fileExistsAtPath: [ URL path ] ] )
                 {
                 BOOL isSuccess = [ ( __bridge NSData* )addedItems writeToURL: URL atomically: YES ];
@@ -218,7 +222,7 @@ OSStatus keychainCallback( SecKeychainEvent _Event
 //    NSLog( @"%s", pathForDefaultKeychain );
 
     SecKeychainRef NSTongG_Keychain = NULL;
-    resultCode = SecKeychainOpen( "/Users/EsquireTongG/NSTongG.keychain", &NSTongG_Keychain );
+    resultCode = SecKeychainOpen( "/Users/EsquireTongG/CertsForKeychainLab/NSTongG.keychain", &NSTongG_Keychain );
     if ( resultCode != errSecSuccess )
         return;
 
@@ -278,7 +282,7 @@ OSStatus keychainCallback( SecKeychainEvent _Event
                     SecKeychainItemCreatePersistentReference( ( __bridge SecKeychainItemRef )( _Elem[ @"v_Ref" ] ), &data );
 
                     NSError* err = nil;
-                    BOOL isSuccess = [ ( __bridge NSData* )data writeToFile: @"/Users/EsquireTongG/keychainItem.dat"
+                    BOOL isSuccess = [ ( __bridge NSData* )data writeToFile: @"/Users/EsquireTongG/CertsForKeychainLab/keychainItem.dat"
                                                                     options: NSDataWritingAtomic
                                                                       error: &err ];
 
@@ -323,7 +327,7 @@ OSStatus keychainCallback( SecKeychainEvent _Event
     
 
 #if 0
-    NSData* persistentItem = [ NSData dataWithContentsOfFile: @"/Users/EsquireTongG/keychainItem.dat" ];
+    NSData* persistentItem = [ NSData dataWithContentsOfFile: @"/Users/EsquireTongG/CertsForKeychainLab/keychainItem.dat" ];
     SecKeychainItemRef itemAwakedFromPersistentData = NULL;
     SecKeychainItemCopyFromPersistentReference( ( __bridge CFDataRef )persistentItem, &itemAwakedFromPersistentData );
 
@@ -427,7 +431,7 @@ OSStatus keychainCallback( SecKeychainEvent _Event
 #if 0
     NSLog( @"Error Code %u: %@", resultCode, SecCopyErrorMessageString( resultCode, NULL ) );
     SecKeychainRef newKeychain = NULL;
-    char const* keychainPath = "/Users/EsquireTongG/Desktop/NSTongG.keychain";
+    char const* keychainPath = "/Users/EsquireTongG/CertsForKeychainLab/NSTongG.keychain";
     char const* passwordForNewKeyChain = "isgtforever";
     if ( ( resultCode = SecKeychainCreate( keychainPath
                                          , ( UInt32 )strlen( passwordForNewKeyChain ), passwordForNewKeyChain
@@ -653,7 +657,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 
     SecKeychainRef NSTongG_Keychain = NULL;
     SecKeychainRef defaultKeychianForCurrentUser = NULL;
-    resultCode = SecKeychainOpen( "/Users/EsquireTongG/NSTongG.keychain", &NSTongG_Keychain );
+    resultCode = SecKeychainOpen( "/Users/EsquireTongG/CertsForKeychainLab/NSTongG.keychain", &NSTongG_Keychain );
     resultCode = resultCode ?: SecKeychainCopyDefault( &defaultKeychianForCurrentUser );
     if ( resultCode != errSecSuccess || !NSTongG_Keychain )
         {
@@ -835,7 +839,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     OSStatus resultCode = errSecSuccess;
 
     SecKeychainRef NSTongG_Keychain = NULL;
-    if ( ( resultCode = SecKeychainOpen( "/Users/EsquireTongG/NSTongG.keychain", &NSTongG_Keychain ) ) != errSecSuccess )
+    if ( ( resultCode = SecKeychainOpen( "/Users/EsquireTongG/CertsForKeychainLab/NSTongG.keychain", &NSTongG_Keychain ) ) != errSecSuccess )
         {
         printErr( resultCode );
         return;
@@ -843,7 +847,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     else
         NSLog( @"%@", ( __bridge id )NSTongG_Keychain );
 
-    NSURL* certURL = [ NSURL URLWithString: @"file:///Users/EsquireTongG/Desktop/MacDeveloper.cer" ];
+    NSURL* certURL = [ NSURL URLWithString: @"file:///Users/EsquireTongG/CertsForKeychainLab/MacDeveloper.cer" ];
 
     if ( [ [ NSFileManager defaultManager ] fileExistsAtPath: certURL.path ] )
         {
@@ -909,6 +913,131 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 
     if ( NSTongG_Keychain )
         CFRelease( NSTongG_Keychain );
+    }
+
+- ( SecKeychainRef ) defaultKeychain: ( NSError** )_Err
+    {
+    OSStatus resultCode = errSecSuccess;
+
+    SecKeychainRef defaultKeychain = NULL;
+    resultCode = SecKeychainCopyDefault( &defaultKeychain );
+
+    if ( resultCode == errSecSuccess )
+        return defaultKeychain;
+    else
+        {
+        if ( _Err )
+            *_Err = [ NSError errorWithDomain: NSOSStatusErrorDomain
+                                         code: ( NSInteger )resultCode
+                                     userInfo: nil ];
+        return nil;
+        }
+    }
+
+- ( SecKeychainRef ) openKeychainWithURL: ( NSURL* )_URL
+                                   error: ( NSError** )_Err
+    {
+    OSStatus resultCode = errSecSuccess;
+
+    SecKeychainRef keychain = NULL;
+    resultCode = SecKeychainOpen( [ _URL.path cStringUsingEncoding: NSUTF8StringEncoding ], &keychain );
+
+    if ( resultCode == errSecSuccess )
+        return keychain;
+    else
+        {
+        if ( _Err )
+            *_Err = [ NSError errorWithDomain: NSOSStatusErrorDomain
+                                         code: ( NSInteger )resultCode
+                                     userInfo: nil ];
+        return nil;
+        }
+    }
+
+- ( IBAction ) generateAsymetricKeyPair: ( id )_Sender
+    {
+#if 0
+    OSStatus resultCode = errSecSuccess;
+
+    NSError* err = nil;
+    SecKeychainRef NSTongG_keychain = [ self openKeychainWithURL: [ NSURL URLWithString: @"file:///Users/EsquireTongG/CertsForKeychainLab/NSTongG.keychain" ]
+                                                           error: &err ];
+    if ( err )
+        {
+        [ self presentError: err ];
+        KCLRelease( NSTongG_keychain );
+
+        return;
+        }
+
+    SecKeyRef publicKey = NULL;
+    SecKeyRef privateKey = NULL;
+
+    CFDictionaryRef parameters = ( __bridge CFDictionaryRef )
+        @{ ( __bridge id )kSecAttrKeyType           : ( __bridge id )kSecAttrKeyTypeRSA
+         , ( __bridge id )kSecAttrKeySizeInBits     : @8192
+         , (
+
+    resultCode = SecKeyGeneratePair
+#endif
+    }
+
+- ( IBAction ) generateSymetricKey: ( id )_Sender
+    {
+    OSStatus resultCode = errSecSuccess;
+
+    NSError* err = nil;
+    SecKeychainRef NSTongG_keychain = [ self openKeychainWithURL: [ NSURL URLWithString: @"file:///User/EsquireTongG/CertsForKeychainLab/NSTongG.keychain" ]
+                                                           error: &err ];
+    if ( err )
+        {
+        [ self presentError: err ];
+        KCLRelease( NSTongG_keychain );
+
+        return;
+        }
+
+    SecKeyRef key = NULL;
+    CFDictionaryRef parameters = ( __bridge CFDictionaryRef )
+        @{ ( __bridge id )kSecAttrKeyType               : ( __bridge id )kSecAttrKeyTypeAES
+         , ( __bridge id )kSecAttrLabel                 : @"NSTongG's Public Key"
+         , ( __bridge id )kSecAttrKeySizeInBits         : @256
+         , ( __bridge id )kSecAttrIsPermanent           : ( __bridge id )kCFBooleanTrue
+         };
+
+    CFErrorRef cfError = NULL;
+    key = SecKeyGenerateSymmetric( parameters, &cfError );
+    if ( cfError )
+        {
+        [ self presentError: ( __bridge NSError* )cfError ];
+        KCLRelease( cfError );
+        }
+
+    if ( resultCode == errSecSuccess )
+        NSLog( @"%@", ( __bridge id )key );
+    else
+        printErr( resultCode );
+
+    KCLRelease( key );
+    KCLRelease( NSTongG_keychain );
+    }
+
+- ( NSError* ) willPresentError: ( NSError* )_Error
+    {
+    NSError* newError = nil;
+    NSMutableDictionary* userInfo = [ [ _Error userInfo ] mutableCopy ];
+
+    if ( [ _Error.domain isEqualToString: NSOSStatusErrorDomain ] )
+        {
+        userInfo[ NSLocalizedDescriptionKey ] = NSLocalizedString( @"The operation cannot be completed.", nil );
+        userInfo[ NSLocalizedRecoverySuggestionErrorKey ] = NSLocalizedString( ( __bridge NSString* )SecCopyErrorMessageString( ( OSStatus )_Error.code, NULL  ), nil );
+        newError = [ NSError errorWithDomain: [ _Error domain ]
+                                        code: [ _Error code ]
+                                    userInfo: userInfo ];
+        return newError;
+        }
+
+    return _Error;
     }
 
 @end // KCLMainWindowController
