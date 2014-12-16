@@ -964,7 +964,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 
     CFDictionaryRef parameters = ( __bridge CFDictionaryRef )
         @{ ( __bridge id )kSecAttrKeyType           : ( __bridge id )kSecAttrKeyTypeRSA
-         , ( __bridge id )kSecAttrKeySizeInBits     : @4096
+         , ( __bridge id )kSecAttrKeySizeInBits     : @409
          , ( __bridge id )kSecAttrLabel             : NSLocalizedString( @"NSTongG RSA", nil )
          , ( __bridge id )kSecAttrIsPermanent       : ( __bridge id )kCFBooleanTrue
          };
@@ -975,6 +975,11 @@ SecAccessRef createAccess( NSString* _AccessLabel )
             {
             [ self.circleProgressIndicator stopAnimation: nil ];
             [ self.circleProgressIndicator setHidden: YES ];
+
+            if ( _Error )
+                [ self performSelectorOnMainThread: @selector( presentError: )
+                                        withObject: ( __bridge NSError* )_Error
+                                     waitUntilDone: YES ];
 
             dispatch_release( queue );
             } );
