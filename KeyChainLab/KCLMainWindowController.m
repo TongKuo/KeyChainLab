@@ -1048,13 +1048,13 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     NSData* certBLOB = [ NSData dataWithContentsOfURL: [ NSURL URLWithString: @"file:///Users/EsquireTongG/CertsForKeychainLab/PKCS12Certificates.p12" ] ];
     SecKeychainRef NSTongG_Keychain = [ self NSTongGKeychain ];
 
-    CFArrayRef items = NULL;
+    CFArrayRef cfItems = NULL;
     resultCode = SecPKCS12Import( ( __bridge CFDataRef )certBLOB
                                 , ( __bridge CFDictionaryRef )
                                     @{ ( __bridge NSString* )kSecImportExportPassphrase : @"isgtforever"
                                      , ( __bridge NSString* )kSecImportExportKeychain : ( __bridge id )NSTongG_Keychain
                                      }
-                                , &items
+                                , &cfItems
                                 );
 
     if ( resultCode != errSecSuccess )
@@ -1063,10 +1063,32 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         return;
         }
 
-    NSLog( @"%@", ( __bridge NSArray* )items );
+    NSLog( @"%@", ( __bridge NSArray* )cfItems );
+
+    NSArray* items = ( __bridge NSArray* )cfItems;
+    SFCertificateTrustPanel* trustPanel = [ SFCertificateTrustPanel sharedCertificateTrustPanel ];
+    [ trustPanel runModalForTrust: ( SecTrustRef )( ( __bridge NSDictionary* )items[ 0 ] )[ ( __bridge NSString* )kSecImportItemTrust ]
+                          message: @"Opps!" ];
+
+    SecIdentityRef identity = ( SecIdentityRef )( ( __bridge NSDictionary* )items[ 0 ] )[ ( __bridge NSString* )kSecImportItemIdentity ];
+    SecCertificateRef cert = [ self extractCertificateFrom: identity ];
+    NSLog( @"Certificate: %@", cert );
 
     KCLRelease( items );
     KCLRelease( NSTongG_Keychain );
+    KCLRelease( cert );
+    }
+
+- ( SecCertificateRef ) extractCertificateFrom: ( SecIdentityRef )_Identity
+    {
+    OSStatus resultCode = errSecSuccess;
+
+    SecCertificateRef cert = NULL;
+    resultCode = SecIdentityCopyCertificate( _Identity, &cert );
+    if ( resultCode != errSecSuccess )
+        printErr( resultCode );
+
+    return cert;
     }
 
 #pragma mark Error Handling
