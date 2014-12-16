@@ -1043,6 +1043,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 
 - ( IBAction ) importPCKS12BLOB: ( id )_Sender
     {
+    NSError* err = nil;
     OSStatus resultCode = errSecSuccess;
 
     NSData* certBLOB = [ NSData dataWithContentsOfURL: [ NSURL URLWithString: @"file:///Users/EsquireTongG/CertsForKeychainLab/PKCS12Certificates.p12" ] ];
@@ -1066,13 +1067,23 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     NSLog( @"%@", ( __bridge NSArray* )cfItems );
 
     NSArray* items = ( __bridge NSArray* )cfItems;
+    NSDictionary* attributesForFirstID = ( __bridge NSDictionary* )items[ 0 ];
     SFCertificateTrustPanel* trustPanel = [ SFCertificateTrustPanel sharedCertificateTrustPanel ];
-    [ trustPanel runModalForTrust: ( SecTrustRef )( ( __bridge NSDictionary* )items[ 0 ] )[ ( __bridge NSString* )kSecImportItemTrust ]
+    [ trustPanel runModalForTrust: ( SecTrustRef )attributesForFirstID[ ( __bridge NSString* )kSecImportItemTrust ]
                           message: @"Opps!" ];
 
-    SecIdentityRef identity = ( SecIdentityRef )( ( __bridge NSDictionary* )items[ 0 ] )[ ( __bridge NSString* )kSecImportItemIdentity ];
-    SecCertificateRef cert = [ self extractCertificateFrom: identity ];
+    SecIdentityRef identity = ( SecIdentityRef )attributesForFirstID[ ( __bridge NSString* )kSecImportItemIdentity ];
+    SecCertificateRef cert = [ self extractCertificateFrom: identity error: &err ];
+    if ( err )
+        [ self presentError: err ];
+
+    SecKeyRef private = [ self extractPricateKeyFrom:( SecIdentityRef )attributesForFirstID[ ( __bridge NSString* )kSecImportItemIdentity ]
+                                               error: &err ];
+    if ( err )
+        [ self presentError: err ];
+
     NSLog( @"Certificate: %@", cert );
+    NSLog( @"Private Key: %@", private );
 
     KCLRelease( items );
     KCLRelease( NSTongG_Keychain );
@@ -1080,15 +1091,45 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     }
 
 - ( SecCertificateRef ) extractCertificateFrom: ( SecIdentityRef )_Identity
+                                         error: ( NSError** )_Error
     {
     OSStatus resultCode = errSecSuccess;
 
     SecCertificateRef cert = NULL;
     resultCode = SecIdentityCopyCertificate( _Identity, &cert );
+
     if ( resultCode != errSecSuccess )
-        printErr( resultCode );
+        {
+        if ( _Error )
+            {
+            *_Error = [ NSError errorWithDomain: NSOSStatusErrorDomain
+                                           code: resultCode
+                                       userInfo: NULL ];
+            }
+        }
 
     return cert;
+    }
+
+- ( SecKeyRef ) extractPricateKeyFrom: ( SecIdentityRef )_Identity
+                                error: ( NSError** )_Error
+    {
+    OSStatus resultCode = errSecSuccess;
+
+    SecKeyRef privateKey = NULL;
+    resultCode = SecIdentityCopyPrivateKey( _Identity, &privateKey );
+
+    if ( resultCode != errSecSuccess )
+        {
+        if ( _Error )
+            {
+            *_Error = [ NSError errorWithDomain: NSOSStatusErrorDomain
+                                           code: resultCode
+                                       userInfo: NULL ];
+            }
+        }
+
+    return privateKey;
     }
 
 #pragma mark Error Handling
