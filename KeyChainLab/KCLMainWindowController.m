@@ -47,6 +47,9 @@
 #define KCLRelease( _Object )   \
     if ( _Object )              \
         CFRelease( _Object )    \
+        
+#define KCLPresentError( _ResultCode )  \
+    [ self presentError: [ NSError errorWithDomain: NSOSStatusErrorDomain code: _ResultCode userInfo: nil ] ]
 
 NSString const* kClickToLockDescription = @"Click to lock the login keychain";
 NSString const* kClickToUnlockDescription = @"Click to unlock the login keychain";
@@ -955,6 +958,17 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         }
     }
 
+- ( SecKeychainRef ) NSTongGKeychain
+    {
+    NSError* err = nil;
+    SecKeychainRef NSTongG_keychain = [ self openKeychainWithURL: [ NSURL URLWithString: @"file:///Users/EsquireTongG/CertsForKeychainLab/NSTongG.keychain" ]
+                                                           error: &err ];
+    if ( err )
+        [ self presentError: err ];
+
+    return NSTongG_keychain;
+    }
+
 - ( IBAction ) generateAsymetricKeyPair: ( id )_Sender
     {
     OSStatus resultCode = errSecSuccess;
@@ -1025,9 +1039,37 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         }
 
     KCLRelease( key );
-//    KCLRelease( NSTongG_keychain );
     }
 
+- ( IBAction ) importPCKS12BLOB: ( id )_Sender
+    {
+    OSStatus resultCode = errSecSuccess;
+
+    NSData* certBLOB = [ NSData dataWithContentsOfURL: [ NSURL URLWithString: @"file:///Users/EsquireTongG/CertsForKeychainLab/PKCS12Certificates.p12" ] ];
+    SecKeychainRef NSTongG_Keychain = [ self NSTongGKeychain ];
+
+    CFArrayRef items = NULL;
+    resultCode = SecPKCS12Import( ( __bridge CFDataRef )certBLOB
+                                , ( __bridge CFDictionaryRef )
+                                    @{ ( __bridge NSString* )kSecImportExportPassphrase : @"isgtforever"
+                                     , ( __bridge NSString* )kSecImportExportKeychain : ( __bridge id )NSTongG_Keychain
+                                     }
+                                , &items
+                                );
+
+    if ( resultCode != errSecSuccess )
+        {
+        KCLPresentError( resultCode );
+        return;
+        }
+
+    NSLog( @"%@", ( __bridge NSArray* )items );
+
+    KCLRelease( items );
+    KCLRelease( NSTongG_Keychain );
+    }
+
+#pragma mark Error Handling
 - ( NSError* ) willPresentError: ( NSError* )_Error
     {
     NSError* newError = nil;

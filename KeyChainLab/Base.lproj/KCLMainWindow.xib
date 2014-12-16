@@ -6,7 +6,6 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="KCLMainWindowController">
             <connections>
-                <outlet property="authorizationView" destination="yKB-70-uLw" id="RhJ-Bb-r32"/>
                 <outlet property="certificatedItemSeg" destination="VfR-gm-r3F" id="uHY-Zn-iKz"/>
                 <outlet property="circleProgressIndicator" destination="PSa-m0-ofT" id="jdo-FD-yPs"/>
                 <outlet property="createCertificateButton" destination="NbL-Gj-8GP" id="8CY-2d-Ouo"/>
@@ -20,14 +19,14 @@
         <window title="Keychain Lab" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="292" width="375" height="266"/>
+            <rect key="contentRect" x="196" y="292" width="375" height="242"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1280" height="778"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="266"/>
+                <rect key="frame" x="0.0" y="0.0" width="375" height="242"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <box autoresizesSubviews="NO" fixedFrame="YES" title="Normal Keychain Item" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="hYe-0a-bkc">
-                        <rect key="frame" x="17" y="191" width="341" height="62"/>
+                        <rect key="frame" x="17" y="167" width="341" height="62"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <view key="contentView">
                             <rect key="frame" x="1" y="1" width="339" height="49"/>
@@ -55,12 +54,8 @@
                         <color key="fillColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                         <font key="titleFont" metaFont="miniSystem"/>
                     </box>
-                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="yKB-70-uLw" customClass="SFAuthorizationView">
-                        <rect key="frame" x="20" y="20" width="273" height="34"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                    </customView>
                     <box autoresizesSubviews="NO" fixedFrame="YES" title="Certificates Item" borderType="line" translatesAutoresizingMaskIntoConstraints="NO" id="WwT-Im-jUx">
-                        <rect key="frame" x="17" y="125" width="341" height="62"/>
+                        <rect key="frame" x="17" y="101" width="341" height="62"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <view key="contentView">
                             <rect key="frame" x="1" y="1" width="339" height="49"/>
@@ -89,7 +84,7 @@
                         <font key="titleFont" metaFont="miniSystem"/>
                     </box>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FZH-JM-PL6">
-                        <rect key="frame" x="20" y="94" width="94" height="23"/>
+                        <rect key="frame" x="20" y="70" width="94" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="smallSquare" title="Evaluate Trust" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jkn-pP-Rlb">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -100,7 +95,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="NbL-Gj-8GP">
-                        <rect key="frame" x="20" y="65" width="94" height="23"/>
+                        <rect key="frame" x="20" y="41" width="94" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="smallSquare" title="Create Cert" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Mtw-5R-1Ys">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -110,8 +105,19 @@
                             <action selector="createCertificate:" target="-2" id="5Ag-vr-Pgz"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n6x-t5-mG5">
+                        <rect key="frame" x="20" y="12" width="149" height="23"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="smallSquare" title="Import PKCS #12 BLOB" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="zeo-Nc-mjb">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="importPCKS12BLOB:" target="-2" id="nvI-O1-s5Q"/>
+                        </connections>
+                    </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mF4-BU-h74">
-                        <rect key="frame" x="122" y="94" width="209" height="23"/>
+                        <rect key="frame" x="122" y="70" width="209" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="smallSquare" title="Generate Symmeric Key" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Zz6-tz-790">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -122,7 +128,7 @@
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="F2S-4f-KcW">
-                        <rect key="frame" x="122" y="65" width="209" height="23"/>
+                        <rect key="frame" x="122" y="41" width="209" height="23"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="smallSquare" title="Generate Asymmeric Key" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="BfW-df-HYF">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -133,7 +139,7 @@
                         </connections>
                     </button>
                     <progressIndicator hidden="YES" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" maxValue="100" bezeled="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="PSa-m0-ofT">
-                        <rect key="frame" x="339" y="68" width="16" height="16"/>
+                        <rect key="frame" x="339" y="44" width="16" height="16"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                     </progressIndicator>
                 </subviews>
