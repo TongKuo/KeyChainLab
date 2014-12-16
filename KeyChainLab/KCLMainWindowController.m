@@ -61,6 +61,7 @@ NSString const* kClickToUnlockDescription = @"Click to unlock the login keychain
 @synthesize createCertificateButton;
 
 @synthesize authorizationView;
+@synthesize circleProgressIndicator;
 
 #pragma mark Initializers
 + ( instancetype ) mainWindowController
@@ -956,36 +957,41 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 
 - ( IBAction ) generateAsymetricKeyPair: ( id )_Sender
     {
-#if 0
     OSStatus resultCode = errSecSuccess;
-
-    NSError* err = nil;
-    SecKeychainRef NSTongG_keychain = [ self openKeychainWithURL: [ NSURL URLWithString: @"file:///Users/EsquireTongG/CertsForKeychainLab/NSTongG.keychain" ]
-                                                           error: &err ];
-    if ( err )
-        {
-        [ self presentError: err ];
-        KCLRelease( NSTongG_keychain );
-
-        return;
-        }
 
     SecKeyRef publicKey = NULL;
     SecKeyRef privateKey = NULL;
 
     CFDictionaryRef parameters = ( __bridge CFDictionaryRef )
         @{ ( __bridge id )kSecAttrKeyType           : ( __bridge id )kSecAttrKeyTypeRSA
-         , ( __bridge id )kSecAttrKeySizeInBits     : @8192
-         , (
+         , ( __bridge id )kSecAttrKeySizeInBits     : @4096
+         , ( __bridge id )kSecAttrLabel             : NSLocalizedString( @"NSTongG RSA", nil )
+         , ( __bridge id )kSecAttrIsPermanent       : ( __bridge id )kCFBooleanTrue
+         };
 
-    resultCode = SecKeyGeneratePair
-#endif
+    dispatch_queue_t queue = dispatch_queue_create( "individual.TongGuo.generatingRSA-keys-pair", DISPATCH_QUEUE_CONCURRENT );
+    SecKeyGeneratePairAsync( parameters, queue
+        , ^( SecKeyRef _PublicKey, SecKeyRef _PrivateKey, CFErrorRef _Error )
+            {
+            [ self.circleProgressIndicator stopAnimation: nil ];
+            [ self.circleProgressIndicator setHidden: YES ];
+
+            dispatch_release( queue );
+            } );
+
+    [ self.circleProgressIndicator setHidden: NO ];
+    [ self.circleProgressIndicator startAnimation: nil ];
+    if ( resultCode != errSecSuccess )
+        [ self presentError: [ NSError errorWithDomain: NSOSStatusErrorDomain
+                                                  code: resultCode
+                                              userInfo: nil ] ];
+    KCLRelease( publicKey );
+    KCLRelease( privateKey );
     }
 
 - ( IBAction ) generateSymetricKey: ( id )_Sender
     {
-    OSStatus resultCode = errSecSuccess;
-
+#if 0
     NSError* err = nil;
     SecKeychainRef NSTongG_keychain = [ self openKeychainWithURL: [ NSURL URLWithString: @"file:///User/EsquireTongG/CertsForKeychainLab/NSTongG.keychain" ]
                                                            error: &err ];
@@ -996,7 +1002,7 @@ SecAccessRef createAccess( NSString* _AccessLabel )
 
         return;
         }
-
+#endif
     SecKeyRef key = NULL;
     CFDictionaryRef parameters = ( __bridge CFDictionaryRef )
         @{ ( __bridge id )kSecAttrKeyType               : ( __bridge id )kSecAttrKeyTypeAES
@@ -1013,13 +1019,8 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         KCLRelease( cfError );
         }
 
-    if ( resultCode == errSecSuccess )
-        NSLog( @"%@", ( __bridge id )key );
-    else
-        printErr( resultCode );
-
     KCLRelease( key );
-    KCLRelease( NSTongG_keychain );
+//    KCLRelease( NSTongG_keychain );
     }
 
 - ( NSError* ) willPresentError: ( NSError* )_Error

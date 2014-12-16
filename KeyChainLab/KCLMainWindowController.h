@@ -45,6 +45,7 @@
 @property ( nonatomic, unsafe_unretained ) IBOutlet NSButton* createCertificateButton;
 
 @property ( nonatomic, unsafe_unretained ) IBOutlet SFAuthorizationView* authorizationView;
+@property ( nonatomic, unsafe_unretained ) IBOutlet NSProgressIndicator* circleProgressIndicator;
 
 + ( instancetype ) mainWindowController;
 
