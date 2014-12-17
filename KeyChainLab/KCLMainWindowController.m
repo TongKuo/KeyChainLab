@@ -1090,6 +1090,23 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     KCLRelease( cert );
     }
 
+- ( IBAction ) preferredID: ( id )_Sender
+    {
+    SecIdentityRef preferredIdentity =
+        SecIdentityCopyPreferred( CFSTR( "Tong-G@outlook.com" )
+                                , ( __bridge CFArrayRef )
+                                    @[ ( __bridge id )kSecAttrCanSign
+                                     , ( __bridge id )kSecAttrCanEncrypt
+                                     , ( __bridge id )kSecAttrCanDecrypt
+                                     ]
+
+                                , ( __bridge CFArrayRef )
+                                    @[ @"fff" ]
+                                );
+
+    NSLog( @"%@", ( __bridge id )preferredIdentity );
+    }
+
 - ( SecCertificateRef ) extractCertificateFrom: ( SecIdentityRef )_Identity
                                          error: ( NSError** )_Error
     {
@@ -1130,6 +1147,27 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         }
 
     return privateKey;
+    }
+
+- ( IBAction ) createKeyFromData: ( id )_Sender
+    {
+    NSData* privateKeyData = [ NSData dataWithContentsOfFile: @"/Users/EsquireTongG/CertsForKeychainLab/privateKeyData.p12" ];
+
+    CFDictionaryRef parameters = ( __bridge CFDictionaryRef )
+        @{ ( __bridge id )kSecAttrKeyType           : ( __bridge id )kSecAttrKeyTypeRSA };
+
+    CFErrorRef error = NULL;
+    SecKeyRef privateKey = SecKeyCreateFromData( parameters, ( __bridge CFDataRef )privateKeyData, &error );
+
+    if ( error )
+        {
+        [ self presentError: ( __bridge NSError* )error ];
+        KCLRelease( error );
+
+        return;
+        }
+
+    NSLog( @"%@", privateKey );
     }
 
 #pragma mark Error Handling
