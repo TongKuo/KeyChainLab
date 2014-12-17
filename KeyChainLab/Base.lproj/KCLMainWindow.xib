@@ -164,6 +164,17 @@
                             <action selector="createKeyFromData:" target="-2" id="N9M-fL-tGS"/>
                         </connections>
                     </button>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="oP2-4K-1SC">
+                        <rect key="frame" x="179" y="19" width="152" height="23"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="smallSquare" title="Derive From Password" bezelStyle="smallSquare" imagePosition="overlaps" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="SI1-Ni-98h">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="deriveFromPassword:" target="-2" id="4xu-9S-siO"/>
+                        </connections>
+                    </button>
                 </subviews>
             </view>
         </window>

@@ -1170,6 +1170,31 @@ SecAccessRef createAccess( NSString* _AccessLabel )
     NSLog( @"%@", privateKey );
     }
 
+- ( IBAction ) deriveFromPassword: ( id )_Sender
+    {
+    CFErrorRef error = nil;
+
+    NSData* salt = [ NSData dataWithContentsOfFile: @"/Users/EsquireTongG/Pictures/test.png" ];
+    SecKeyRef derivedKey = SecKeyDeriveFromPassword( CFSTR( "Dontbeabitch77!." )
+                                                   , ( __bridge CFDictionaryRef )
+                                                        @{ @( kSecKeyKeyType )                  : @( CSSM_ALGID_RSA )
+                                                         , ( __bridge id )kSecAttrSalt          : salt
+                                                         , ( __bridge id )kSecAttrPRF           : ( __bridge id )kSecAttrPRFHmacAlgSHA512
+                                                         , ( __bridge id )kSecAttrRounds        : @0
+                                                         , ( __bridge id )kSecAttrKeySizeInBits : @1024
+                                                         }
+                                                   , &error
+                                                   );
+    if ( error )
+        {
+        [ self presentError: ( __bridge NSError* )error ];
+        CFRelease( error );
+        return;
+        }
+
+    NSLog( @"%@", derivedKey );
+    }
+
 #pragma mark Error Handling
 - ( NSError* ) willPresentError: ( NSError* )_Error
     {
