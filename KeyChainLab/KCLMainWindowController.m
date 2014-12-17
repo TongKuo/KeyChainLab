@@ -326,6 +326,14 @@ OSStatus keychainCallback( SecKeychainEvent _Event
     }
 
 #pragma mark Conforms <NSNibAwaking> protocol
+static CFStringRef title = NULL;
+void setTitle( CFStringRef _NewTitle )
+    {
+    CFStringRef temp = _NewTitle;
+    title = CFStringCreateCopy( kCFAllocatorDefault, _NewTitle );
+    CFRelease( temp );
+    }
+
 - ( void ) awakeFromNib
     {
     
@@ -1168,6 +1176,8 @@ SecAccessRef createAccess( NSString* _AccessLabel )
         }
 
     NSLog( @"%@", privateKey );
+
+    KCLRelease( privateKey );
     }
 
 - ( IBAction ) deriveFromPassword: ( id )_Sender
