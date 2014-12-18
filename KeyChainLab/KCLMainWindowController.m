@@ -336,7 +336,7 @@ void setTitle( CFStringRef _NewTitle )
 
 - ( void ) awakeFromNib
     {
-    
+    setTitle( @"I'm Tong Guo" );
 
 #if 0
     NSData* persistentItem = [ NSData dataWithContentsOfFile: @"/Users/EsquireTongG/CertsForKeychainLab/keychainItem.dat" ];
