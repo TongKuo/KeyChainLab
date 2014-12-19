@@ -59,7 +59,11 @@
  
  Note that there are additional cool things here, like [direct hyperlinks](http://www.cocoanetics.com)
  
- @param number A parameter that is passed in, almost as cool as someMethodWithString:
+ @param _GenericPassword A parameter that is passed in, almost as cool as someMethodWithString:
+ @param _ServiceName Service Name
+ @param _UserName User Name
+ @param _Keychain Keychain
+ @param _KeychainItemRef Reference to Keychain Item
  @return Whatever it returns.
  @warning *Warning:* A blue background.
  @bug *Bug:* A yellow background.
