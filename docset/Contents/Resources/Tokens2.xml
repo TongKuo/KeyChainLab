@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Tokens version="1.0">
+	<File path="Classes/KCLMainWindowController.html">
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/cl/KCLMainWindowController</TokenIdentifier>
+			<Abstract type="html">This class demonstrates AppleDoc.</Abstract>
+			<DeclaredIn>KCLMainWindowController.h</DeclaredIn>
+            
+			
+			<NodeRef refid="2"/>
+		</Token>
+		
+		
+		<Token>
+			<TokenIdentifier>//apple_ref/occ/instm/KCLMainWindowController/addGenericPassword:withSeviceName:userName:toKeychain:returnedItem:</TokenIdentifier>
+			<Abstract type="html">This is the second super-awesome method.</Abstract>
+			<DeclaredIn>KCLMainWindowController.h</DeclaredIn>
+			
+			<Declaration>- (OSStatus)addGenericPassword:(NSString *)_GenericPassword withSeviceName:(NSString *)_ServiceName userName:(NSString *)_UserName toKeychain:(SecKeychainRef)_Keychain returnedItem:(SecKeychainItemRef *)_KeychainItemRef</Declaration>
+			<Parameters>
+				<Parameter>
+					<Name>_GenericPassword</Name>
+					<Abstract type="html">Generic Password</Abstract>
+				</Parameter><Parameter>
+					<Name>_ServiceName</Name>
+					<Abstract type="html">Service Name</Abstract>
+				</Parameter><Parameter>
+					<Name>_UserName</Name>
+					<Abstract type="html">User Name</Abstract>
+				</Parameter><Parameter>
+					<Name>_Keychain</Name>
+					<Abstract type="html">Keychain</Abstract>
+				</Parameter><Parameter>
+					<Name>_KeychainItemRef</Name>
+					<Abstract type="html">Reference to Keychain Item</Abstract>
+				</Parameter>
+			</Parameters>
+			<ReturnValue><Abstract type="html">OSStatus</Abstract></ReturnValue>
+			<Anchor>//api/name/addGenericPassword:withSeviceName:userName:toKeychain:returnedItem:</Anchor>
+            <NodeRef refid="2"/>
+		</Token>
+		
+        
+	</File>
+</Tokens>

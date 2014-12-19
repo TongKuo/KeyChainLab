@@ -186,6 +186,7 @@
 				830827D81A2B0E590050A473 /* Sources */,
 				830827D91A2B0E590050A473 /* Frameworks */,
 				830827DA1A2B0E590050A473 /* Resources */,
+				83890D461A43A2E300115C76 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -280,6 +281,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		83890D461A43A2E300115C76 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# appledoc Xcode Integration Script\n\n# Start Constants\noutputPath      = \"~/KeychainLabDoc\";\n\n# End Constants\n/usr/bin/appledoc                                                               \\\n--project-name              \"${PROJECT_NAME}\"                                   \\\n--project-company           \"Tong Guo\"                                          \\\n--company-id                \"individual.TongGuo\"                                \\\n--docset-atom-filename      \"${company}.atom\"                                   \\\n--docset-feed-url           \"${companyURL}/${company}/%DOCSETATOMFILENAME\"      \\\n--docset-package-url        \"${companyURL}/${company}/%DOCSETPACKAGEFILENAME\"   \\\n--docset-fallback-url       \"${companyURL}/${company}\"                          \\\n--output                    \"${outputPath}\"                                     \\\n--publish-docset                                                                \\\n--docset-platform-family    \"${target}\"                                         \\\n--logformat                 xcode                                               \\\n--keep-intermediate-files                                                       \\\n--no-repeat-first-par                                                           \\\n--no-warn-invalid-crossref                                                      \\\n--exit-threshold            10                                                   \\\n\"${PROJECT_DIR}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		830827D81A2B0E590050A473 /* Sources */ = {
