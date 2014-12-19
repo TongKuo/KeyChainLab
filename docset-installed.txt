@@ -1,4 +1,0 @@
-Documentation set was installed to Xcode!
-
-Path: /Users/EsquireTongG/Library/Developer/Shared/Documentation/DocSets/individual.TongGuo.KeyChainLab.docset
-Time: 2014-12-19 02:58:25 +0000

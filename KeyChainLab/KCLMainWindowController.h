@@ -55,16 +55,12 @@
 @property ( nonatomic, unsafe_unretained ) IBOutlet SFAuthorizationView* authorizationView;
 @property ( nonatomic, unsafe_unretained ) IBOutlet NSProgressIndicator* circleProgressIndicator;
 
-/** This is the second super-awesome method.
+/*** This is the second super-awesome method.
  
  Note that there are additional cool things here, like [direct hyperlinks](http://www.cocoanetics.com)
  
- @param _GenericPassword Generic Password
- @param _ServiceName Service Name
- @param _UserName User Name
- @param _Keychain Keychain
- @param _KeychainItemRef Reference to Keychain Item
- @return OSStatus 
+ @param number A parameter that is passed in, almost as cool as someMethodWithString:
+ @return Whatever it returns.
  @warning *Warning:* A blue background.
  @bug *Bug:* A yellow background.
  */

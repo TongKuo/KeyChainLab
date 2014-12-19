@@ -35,8 +35,16 @@
 
 @class KCLMainWindowController;
 
-// KCLAppDelegate class
+/** Analogous to a MIDI event, an AK Event can be based on a AKNote such as
+ a note on, note off, note property change, or it can be a block containing
+ intrument property changes.  The block can 
+ */
+
 @interface KCLAppDelegate : NSObject <NSApplicationDelegate>
+
+// -----------------------------------------------------------------------------
+#  pragma mark - Initialization
+// -----------------------------------------------------------------------------
 
 @property ( nonatomic, retain ) KCLMainWindowController* mainWindowController;
 
